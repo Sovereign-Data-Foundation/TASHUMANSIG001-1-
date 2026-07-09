@@ -1,0 +1,13 @@
+{
+  "name": "tas-jules-bridge",
+  "version": "1.0.0",
+  "description": "Bidirectional Gmail ↔ Jules sub-agent bridge with TAS-style witness receipts",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}

@@ -1,0 +1,14 @@
+uploads = []
+generated = []
+
+[[outputs]]
+id = "Mg0shvTgdKsLai3rRSLna"
+uri = "file://tas-deck.zip"
+type = "unspecified"
+title = "TrueAlphaSpiral — Technical Specification Deck (HTML)"
+
+[[outputs]]
+id = "gelimoPfRy97A_asKk6RD"
+uri = "file://tas-vineyard.zip"
+type = "unspecified"
+title = "TAS Vineyard Chain — Seed to Sip (standalone HTML)"

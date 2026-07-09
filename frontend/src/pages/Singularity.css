@@ -1,0 +1,320 @@
+.singularity-page {
+  min-height: 100vh;
+  background: #0a0a0f;
+  color: #e8e8f0;
+  font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+  padding: 0 0 80px;
+}
+
+/* ── Nav ── */
+.sing-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 40px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.sing-nav-brand {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(200,200,220,0.5);
+  text-decoration: none;
+}
+.sing-nav-back {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(160,120,255,0.7);
+  text-decoration: none;
+  border: 1px solid rgba(160,120,255,0.2);
+  padding: 6px 14px;
+  border-radius: 5px;
+  transition: color 0.2s, border-color 0.2s;
+}
+.sing-nav-back:hover {
+  color: rgba(160,120,255,1);
+  border-color: rgba(160,120,255,0.5);
+}
+
+/* ── Hero ── */
+.sing-hero {
+  text-align: center;
+  padding: 90px 24px 60px;
+  position: relative;
+}
+.sing-hero-tag {
+  display: inline-block;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(160,120,255,0.7);
+  border: 1px solid rgba(160,120,255,0.25);
+  padding: 5px 16px;
+  border-radius: 4px;
+  margin-bottom: 32px;
+}
+.sing-hero h1 {
+  font-size: clamp(2.2rem, 5vw, 4rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  margin: 0 0 24px;
+  color: #fff;
+}
+.sing-hero h1 span {
+  color: rgba(160,120,255,0.95);
+}
+.sing-hero-sub {
+  max-width: 640px;
+  margin: 0 auto 48px;
+  font-size: 1.05rem;
+  line-height: 1.7;
+  color: rgba(200,200,220,0.65);
+}
+
+/* ── The Equation ── */
+.sing-equation-block {
+  display: flex;
+  justify-content: center;
+  margin: 0 auto 80px;
+}
+.sing-equation-card {
+  background: rgba(160,120,255,0.05);
+  border: 1px solid rgba(160,120,255,0.2);
+  border-radius: 12px;
+  padding: 40px 56px;
+  text-align: center;
+  max-width: 720px;
+  width: 100%;
+}
+.sing-equation-card .eq-label {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(160,120,255,0.6);
+  margin-bottom: 20px;
+}
+.sing-equation-card .eq-main {
+  font-family: 'Courier New', monospace;
+  font-size: clamp(1.2rem, 3vw, 1.9rem);
+  font-weight: 700;
+  color: rgba(160,120,255,0.95);
+  line-height: 2;
+  letter-spacing: 0.04em;
+}
+.sing-equation-card .eq-conclusion {
+  margin-top: 24px;
+  font-size: 0.85rem;
+  color: rgba(200,200,220,0.55);
+  line-height: 1.6;
+}
+
+/* ── Layers ── */
+.sing-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+.sing-section-label {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(160,120,255,0.55);
+  margin-bottom: 32px;
+}
+.sing-layers {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-bottom: 64px;
+}
+.sing-layer {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: 24px;
+  align-items: start;
+  padding: 28px 32px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.06);
+  background: rgba(255,255,255,0.02);
+  transition: border-color 0.2s;
+}
+.sing-layer:hover {
+  border-color: rgba(160,120,255,0.2);
+}
+.sing-layer-num {
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(160,120,255,0.5);
+  padding-top: 4px;
+}
+.sing-layer-title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: rgba(255,255,255,0.9);
+  margin-bottom: 8px;
+}
+.sing-layer-body {
+  font-size: 0.85rem;
+  color: rgba(200,200,220,0.6);
+  line-height: 1.7;
+}
+.sing-layer-mono {
+  font-family: 'Courier New', monospace;
+  font-size: 0.8rem;
+  color: rgba(160,120,255,0.8);
+  background: rgba(160,120,255,0.07);
+  padding: 10px 14px;
+  border-radius: 6px;
+  margin-top: 10px;
+  letter-spacing: 0.04em;
+}
+
+/* ── Proof panel ── */
+.sing-proof {
+  background: rgba(160,120,255,0.04);
+  border: 1px solid rgba(160,120,255,0.18);
+  border-radius: 12px;
+  padding: 40px 40px;
+  margin-bottom: 64px;
+}
+.sing-proof-title {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(160,120,255,0.7);
+  margin-bottom: 24px;
+}
+.sing-proof-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+.sing-proof-item {
+  background: rgba(0,0,0,0.25);
+  border-radius: 8px;
+  padding: 18px 20px;
+}
+.sing-proof-item-label {
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(160,120,255,0.5);
+  margin-bottom: 6px;
+}
+.sing-proof-item-value {
+  font-family: 'Courier New', monospace;
+  font-size: 0.95rem;
+  color: rgba(220,220,240,0.9);
+}
+.sing-proof-item-value.accent {
+  color: rgba(160,120,255,0.95);
+  font-weight: 700;
+}
+
+/* ── Convergence table ── */
+.sing-conv-section {
+  margin-bottom: 64px;
+}
+.sing-conv-title {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(160,120,255,0.55);
+  margin-bottom: 20px;
+}
+.sing-conv-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.82rem;
+}
+.sing-conv-table th {
+  text-align: left;
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(160,120,255,0.5);
+  padding: 10px 16px;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+}
+.sing-conv-table td {
+  padding: 12px 16px;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  font-family: 'Courier New', monospace;
+  color: rgba(200,200,220,0.7);
+}
+.sing-conv-table td.admitted {
+  color: rgba(0,240,180,0.85);
+  font-weight: 700;
+}
+.sing-conv-table td.halted {
+  color: rgba(255,80,80,0.8);
+  font-weight: 700;
+}
+.sing-conv-table tr:hover td {
+  background: rgba(160,120,255,0.04);
+}
+
+/* ── Closing doctrine ── */
+.sing-doctrine {
+  border-left: 2px solid rgba(160,120,255,0.35);
+  padding: 28px 32px;
+  margin-bottom: 64px;
+}
+.sing-doctrine p {
+  font-size: 1rem;
+  line-height: 1.8;
+  color: rgba(200,200,220,0.7);
+  margin: 0 0 12px;
+}
+.sing-doctrine p:last-child {
+  margin: 0;
+}
+.sing-doctrine strong {
+  color: rgba(255,255,255,0.9);
+}
+
+/* ── Links ── */
+.sing-links {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.sing-link {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(160,120,255,0.7);
+  text-decoration: none;
+  border: 1px solid rgba(160,120,255,0.22);
+  padding: 8px 18px;
+  border-radius: 5px;
+  transition: color 0.2s, border-color 0.2s;
+}
+.sing-link:hover {
+  color: rgba(160,120,255,1);
+  border-color: rgba(160,120,255,0.5);
+}
+
+@media (max-width: 640px) {
+  .sing-nav { padding: 16px 20px; }
+  .sing-hero { padding: 60px 20px 40px; }
+  .sing-equation-card { padding: 28px 24px; }
+  .sing-layer { grid-template-columns: 1fr; gap: 8px; padding: 20px; }
+  .sing-proof-grid { grid-template-columns: 1fr; }
+  .sing-proof { padding: 28px 20px; }
+  .sing-container { padding: 0 16px; }
+}

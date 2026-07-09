@@ -1,0 +1,432 @@
+.rx-page {
+  min-height: 100vh;
+  background: #071014;
+  color: #edf7f9;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Inter, Roboto, Arial, sans-serif;
+  position: relative;
+  overflow-x: hidden;
+}
+
+.rx-glow-tl {
+  position: fixed;
+  top: -180px;
+  left: -180px;
+  width: 560px;
+  height: 560px;
+  background: radial-gradient(circle, rgba(0,240,255,0.09) 0%, transparent 65%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.rx-container {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 36px 28px 64px;
+  position: relative;
+  z-index: 1;
+}
+
+/* ── Back / nav ── */
+.rx-back-row {
+  margin-bottom: 32px;
+}
+
+.rx-back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: rgba(0,240,255,0.7);
+  text-decoration: none;
+  border: 1px solid rgba(0,240,255,0.2);
+  padding: 7px 14px;
+  border-radius: 6px;
+  transition: color 0.2s, border-color 0.2s, background 0.2s;
+}
+
+.rx-back-btn:hover {
+  color: #00f0ff;
+  border-color: rgba(0,240,255,0.5);
+  background: rgba(0,240,255,0.06);
+}
+
+/* ── Header ── */
+.rx-kicker {
+  color: #00f0ff;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-size: 11px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.rx-h1 {
+  margin: 0 0 12px;
+  font-size: clamp(32px, 5vw, 56px);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 0.96;
+  color: #edf7f9;
+}
+
+.rx-subtitle {
+  margin: 0 0 40px;
+  color: #a9c4ca;
+  font-size: 16px;
+  line-height: 1.7;
+  max-width: 660px;
+}
+
+.rx-subtitle strong {
+  color: #edf7f9;
+}
+
+/* ── Axiom pills ── */
+.rx-axioms {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 40px;
+}
+
+.rx-axiom-pill {
+  border: 1px solid rgba(0,240,255,0.25);
+  background: rgba(0,240,255,0.06);
+  border-radius: 8px;
+  padding: 10px 18px;
+  font-size: 0.8rem;
+  line-height: 1.5;
+}
+
+.rx-axiom-pill strong {
+  color: #00f0ff;
+  display: block;
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 3px;
+}
+
+/* ── Verifier panel ── */
+.rx-verifier {
+  background: linear-gradient(180deg, rgba(255,255,255,0.035), rgba(255,255,255,0.012));
+  border: 1px solid rgba(130,242,255,0.2);
+  border-radius: 20px;
+  padding: 28px;
+  margin-bottom: 28px;
+}
+
+.rx-verifier-title {
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #00f0ff;
+  margin: 0 0 16px;
+}
+
+.rx-input-row {
+  display: flex;
+  gap: 12px;
+  align-items: stretch;
+  margin-bottom: 16px;
+}
+
+.rx-input {
+  flex: 1;
+  background: rgba(0,0,0,0.4);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 8px;
+  padding: 12px 16px;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 13px;
+  color: #dffaff;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.rx-input:focus {
+  border-color: rgba(0,240,255,0.45);
+}
+
+.rx-input::placeholder {
+  color: rgba(169,196,202,0.45);
+}
+
+.rx-verify-btn {
+  background: rgba(0,240,255,0.12);
+  border: 1px solid rgba(0,240,255,0.35);
+  border-radius: 8px;
+  padding: 12px 22px;
+  color: #00f0ff;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+  white-space: nowrap;
+}
+
+.rx-verify-btn:hover {
+  background: rgba(0,240,255,0.2);
+  border-color: rgba(0,240,255,0.6);
+}
+
+.rx-result {
+  border-radius: 10px;
+  padding: 14px 18px;
+  font-size: 13px;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  line-height: 1.7;
+}
+
+.rx-result-pass {
+  background: rgba(0,240,255,0.07);
+  border: 1px solid rgba(0,240,255,0.3);
+  color: #dffaff;
+}
+
+.rx-result-fail {
+  background: rgba(255,60,60,0.07);
+  border: 1px solid rgba(255,60,60,0.25);
+  color: #ffb4b4;
+}
+
+.rx-result-idle {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.07);
+  color: #a9c4ca;
+}
+
+/* ── Chain info cards ── */
+.rx-chain-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-bottom: 28px;
+}
+
+.rx-chain-card {
+  background: rgba(13,26,32,0.85);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 14px;
+  padding: 18px 20px;
+}
+
+.rx-chain-label {
+  font-size: 0.65rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(169,196,202,0.6);
+  margin-bottom: 8px;
+}
+
+.rx-chain-value {
+  font-size: 1.6rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: #edf7f9;
+  line-height: 1;
+}
+
+.rx-chain-value-sm {
+  font-size: 0.7rem;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  color: #dffaff;
+  word-break: break-all;
+  line-height: 1.6;
+}
+
+.rx-chain-card-hi {
+  border-color: rgba(0,240,255,0.25);
+  background: rgba(0,240,255,0.05);
+}
+
+/* ── Receipt stream ── */
+.rx-section-title {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(169,196,202,0.7);
+  margin: 0 0 14px;
+}
+
+.rx-stream {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-bottom: 28px;
+}
+
+.rx-receipt {
+  display: grid;
+  grid-template-columns: 48px 1fr auto auto;
+  gap: 12px;
+  align-items: center;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.05);
+  border-radius: 10px;
+  padding: 10px 16px;
+  transition: background 0.15s;
+}
+
+.rx-receipt:hover {
+  background: rgba(255,255,255,0.04);
+}
+
+.rx-receipt-genesis {
+  border-color: rgba(0,240,255,0.2);
+  background: rgba(0,240,255,0.04);
+}
+
+.rx-receipt-seal {
+  border-color: rgba(0,240,255,0.15);
+  background: rgba(0,240,255,0.03);
+}
+
+.rx-seq {
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 11px;
+  color: rgba(169,196,202,0.5);
+  text-align: right;
+}
+
+.rx-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #edf7f9;
+}
+
+.rx-label-sub {
+  font-size: 10px;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  color: rgba(169,196,202,0.5);
+  margin-top: 2px;
+  word-break: break-all;
+}
+
+.rx-badge {
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+.rx-badge-admitted {
+  background: rgba(0,240,255,0.1);
+  border: 1px solid rgba(0,240,255,0.25);
+  color: #00f0ff;
+}
+
+.rx-badge-genesis {
+  background: rgba(0,240,255,0.15);
+  border: 1px solid rgba(0,240,255,0.35);
+  color: #00f0ff;
+}
+
+.rx-badge-seal {
+  background: rgba(100,220,180,0.1);
+  border: 1px solid rgba(100,220,180,0.3);
+  color: #64dcb4;
+}
+
+.rx-event-type {
+  font-size: 0.6rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(169,196,202,0.4);
+  text-align: right;
+}
+
+/* ── Refusals ── */
+.rx-refusal {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 12px;
+  align-items: center;
+  background: rgba(255,60,60,0.04);
+  border: 1px solid rgba(255,60,60,0.15);
+  border-left: 3px solid rgba(255,80,80,0.5);
+  border-radius: 10px;
+  padding: 12px 16px;
+}
+
+.rx-refusal-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #ffb4b4;
+}
+
+.rx-refusal-doctrine {
+  font-size: 10px;
+  color: rgba(255,180,180,0.55);
+  margin-top: 3px;
+  font-style: italic;
+}
+
+.rx-badge-refused {
+  background: rgba(255,60,60,0.1);
+  border: 1px solid rgba(255,60,60,0.25);
+  color: #ff8080;
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+/* ── Footer ── */
+.rx-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+  margin-top: 40px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(255,255,255,0.07);
+  color: #a9c4ca;
+  font-size: 12px;
+  flex-wrap: wrap;
+}
+
+/* ── Responsive ── */
+@media (max-width: 720px) {
+  .rx-chain-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .rx-receipt {
+    grid-template-columns: 36px 1fr;
+    grid-template-rows: auto auto;
+  }
+
+  .rx-badge,
+  .rx-event-type {
+    display: none;
+  }
+
+  .rx-input-row {
+    flex-direction: column;
+  }
+
+  .rx-footer {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 480px) {
+  .rx-chain-grid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+# Tracked pre-commit hook — kept in .githooks/ so it is versioned.
+# Install once per clone with:  bash setup-hooks.sh
+#
+# What it does:
+#   1. Runs update_readme_test_count.py to reflect the live passing count.
+#   2. Stages replit.md so the updated count travels with the commit.
+
+set -e
+
+echo "pre-commit: updating test count in replit.md..."
+
+python update_readme_test_count.py
+
+git add replit.md
+
+echo "pre-commit: done."

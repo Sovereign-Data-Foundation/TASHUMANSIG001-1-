@@ -1,0 +1,25 @@
+environment:
+  setup: |
+    pip install -r requirements.txt -q
+
+test:
+  command: python -m pytest tests/ -v
+
+context: |
+  This is TrueAlphaSpiral (TAS) — a Python reference implementation of a
+  recursive governance architecture for autonomous agents.
+
+  Core invariants live in: wake_chain.py, capability.py, uvk.py,
+  tas_logos_gatekeeper.py, artifact_guard.py, stability.py,
+  algorithmic_polymath.py, human_api_bridge.py, psvp.py, truth_audit.py,
+  axioms.py, sovereign_accountability.py.
+
+  The full invariant index is at: tests/invariants.md
+
+  Rules:
+  - All 636 tests must pass before any PR is merged.
+  - Do not change test behaviour — only add tests or annotate them.
+  - HMAC digests, entropy floors, and capability revocation are
+    deterministic; do not introduce randomness into these paths.
+  - Any change to a wake-chain or UVK response shape must be reflected
+    in tests/invariants.md.

@@ -1,0 +1,318 @@
+{
+  "schema": "TAS-PDR-v1",
+  "session_id": "tas-day-zero-2026-07-06",
+  "generated_at": "2026-07-06T19:44:08Z",
+  "genesis_chain_id": "TAS-sovereign-01",
+  "genesis_app_hash": "3A9FA182A94363B1BFD8E867D28CF10407654B38B8BDD5392011BC49B6C55D6A",
+  "wake_head_final": "0eae47c7b46ef877a5f9a875046ab195a283d7bcaf1fe510e486eb3a2111d9dc",
+  "chain_verified": true,
+  "axiom_p0_registry_hash": "1a191090c59cedaa94948eca0d0c0820f39408cb3dd7c6ed6b3b7913c463d095",
+  "axiom_p1_admitted": 12,
+  "axiom_p1_rejected": 0,
+  "receipts": [
+    {
+      "seq": 0,
+      "label": "genesis_anchor_block",
+      "event_type": "genesis",
+      "admitted": true,
+      "axiom_p0_registry_hash": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "axiom_p1_verdict": "GENESIS_BLOCK",
+      "pm": {
+        "id": "tas-day-zero-2026-07-06",
+        "seq": 0,
+        "prev": "0000000000000000000000000000000000000000000000000000000000000000",
+        "key_commit": "0000000000000000000000000000000000000000000000000000000000000000",
+        "event_hash": "e1c0a31d76d1e8b2d4e8701a3feb535f9294f50ac820935891d8abfe708d2753",
+        "info": {
+          "genesis_chain_id": "TAS-sovereign-01",
+          "app_hash": "3A9FA182A94363B1BFD8E867D28CF10407654B38B8BDD5392011BC49B6C55D6A"
+        },
+        "sig": "e24479a5899f4671be84762198e976aacbac49225dc50841fab884dcaa38f821"
+      },
+      "timestamp": "2026-07-06T19:44:08Z"
+    },
+    {
+      "seq": 1,
+      "label": "genesis_anchor",
+      "event_type": "state_transition",
+      "admitted": true,
+      "axiom_p0_result": "BOUND",
+      "axiom_p1_verdict": "ADMITTED",
+      "pm": {
+        "id": "tas-day-zero-2026-07-06",
+        "seq": 1,
+        "prev": "2c6eb74195b9375c2d811020d51f91e14eae55c725aeff48dc7636b6fc0f7b30",
+        "key_commit": "0000000000000000000000000000000000000000000000000000000000000000",
+        "event_hash": "bbb99732cf203b752edaf43c926232da66617195968d2dbdf18f15c4a1f5de17",
+        "info": {
+          "source": "genesis_anchor.py",
+          "p0_result": "BOUND",
+          "p1_verdict": "ADMITTED"
+        },
+        "sig": "745a18609f42b965183c43923b1596d96bc5872a76ca3f0c647232c7152a4204"
+      },
+      "timestamp": "2026-07-06T19:44:08Z"
+    },
+    {
+      "seq": 2,
+      "label": "wake_chain_init",
+      "event_type": "state_transition",
+      "admitted": true,
+      "axiom_p0_result": "BOUND",
+      "axiom_p1_verdict": "ADMITTED",
+      "pm": {
+        "id": "tas-day-zero-2026-07-06",
+        "seq": 2,
+        "prev": "fe43c8738dff8ac69c4e6c495f95ebe76776b33821742face6dd2a81516b6b29",
+        "key_commit": "0000000000000000000000000000000000000000000000000000000000000000",
+        "event_hash": "c4b378a9c2cdc51e72ade333eeace499b5d36409d46b90985b94839ad59c539e",
+        "info": {
+          "source": "wake_chain.py",
+          "p0_result": "BOUND",
+          "p1_verdict": "ADMITTED"
+        },
+        "sig": "51cc40a85241beeb886e78802cf832bd01711e253b9e3a03e3d2254252ed4a99"
+      },
+      "timestamp": "2026-07-06T19:44:08Z"
+    },
+    {
+      "seq": 3,
+      "label": "p0_equivalence_lock",
+      "event_type": "state_transition",
+      "admitted": true,
+      "axiom_p0_result": "BOUND",
+      "axiom_p1_verdict": "ADMITTED",
+      "pm": {
+        "id": "tas-day-zero-2026-07-06",
+        "seq": 3,
+        "prev": "f629162c4b75a9df9140968baa0f31eb065ed091a8ebbc06203c64a6da60426f",
+        "key_commit": "0000000000000000000000000000000000000000000000000000000000000000",
+        "event_hash": "4f2b848dc10e169dd63488389158f419eece471d55a2c4a98a0fabff60c22e6e",
+        "info": {
+          "source": "axioms.py",
+          "p0_result": "BOUND",
+          "p1_verdict": "ADMITTED"
+        },
+        "sig": "f4dec7fa636b12579c66a58369e6ebaa4e132593dd5c613affe5d195ba95d0aa"
+      },
+      "timestamp": "2026-07-06T19:44:08Z"
+    },
+    {
+      "seq": 4,
+      "label": "p1_admissibility_gate",
+      "event_type": "state_transition",
+      "admitted": true,
+      "axiom_p0_result": "BOUND",
+      "axiom_p1_verdict": "ADMITTED",
+      "pm": {
+        "id": "tas-day-zero-2026-07-06",
+        "seq": 4,
+        "prev": "66b034a30df4b8d3b4b962e0854284294f9c73fba8c669e9990e31abd32e84d9",
+        "key_commit": "0000000000000000000000000000000000000000000000000000000000000000",
+        "event_hash": "a33c2a98df74ad11cc907330f1731db1fb4b4b73efe01eeddfdb2a9bdb988965",
+        "info": {
+          "source": "axioms.py",
+          "p0_result": "BOUND",
+          "p1_verdict": "ADMITTED"
+        },
+        "sig": "31d197528687b312c4e93e0d8e11b5f9f56f73e193e7faf807c0eddba44cc64e"
+      },
+      "timestamp": "2026-07-06T19:44:08Z"
+    },
+    {
+      "seq": 5,
+      "label": "logos_gate_pass",
+      "event_type": "state_transition",
+      "admitted": true,
+      "axiom_p0_result": "BOUND",
+      "axiom_p1_verdict": "ADMITTED",
+      "pm": {
+        "id": "tas-day-zero-2026-07-06",
+        "seq": 5,
+        "prev": "c6be4387a5ab93f2780a66d790014a50924099a7181c86c2d648d3d398761a06",
+        "key_commit": "0000000000000000000000000000000000000000000000000000000000000000",
+        "event_hash": "d8b4bb32cdb3baa73928c430d7ad26612b08efbe0f986be183570baa394b8647",
+        "info": {
+          "source": "tas_logos_gatekeeper.py",
+          "p0_result": "BOUND",
+          "p1_verdict": "ADMITTED"
+        },
+        "sig": "5e5b77d2bc262f161c4ca258f4f13b20c653548c652772d0d8f097c84b57d4a6"
+      },
+      "timestamp": "2026-07-06T19:44:08Z"
+    },
+    {
+      "seq": 6,
+      "label": "phoenix_circuit_armed",
+      "event_type": "state_transition",
+      "admitted": true,
+      "axiom_p0_result": "BOUND",
+      "axiom_p1_verdict": "ADMITTED",
+      "pm": {
+        "id": "tas-day-zero-2026-07-06",
+        "seq": 6,
+        "prev": "333378bffd4bd1e5f7a53572b36b7afc56626d01ce421bd63a550d8f51fb0fcb",
+        "key_commit": "0000000000000000000000000000000000000000000000000000000000000000",
+        "event_hash": "795ecf327e7ec7d1a4cb2950e6d066df929af396ffee8be605d33e8cc05a5b1e",
+        "info": {
+          "source": "phoenix.py",
+          "p0_result": "BOUND",
+          "p1_verdict": "ADMITTED"
+        },
+        "sig": "30f32e715ec5f4ba356ee340fefdf50f4bc30c7eda7326109bded582174c01ca"
+      },
+      "timestamp": "2026-07-06T19:44:08Z"
+    },
+    {
+      "seq": 7,
+      "label": "yknot_branch_tied",
+      "event_type": "state_transition",
+      "admitted": true,
+      "axiom_p0_result": "BOUND",
+      "axiom_p1_verdict": "ADMITTED",
+      "pm": {
+        "id": "tas-day-zero-2026-07-06",
+        "seq": 7,
+        "prev": "b32df285c33944ea8aa4a53d1be3c1863005c3d6940181e768ddbfc77e24e9bc",
+        "key_commit": "0000000000000000000000000000000000000000000000000000000000000000",
+        "event_hash": "07fbd86638f690633d2ed6a33cc8c8b5413a563533b2a5a504548b92079ecc63",
+        "info": {
+          "source": "yknot.py",
+          "p0_result": "BOUND",
+          "p1_verdict": "ADMITTED"
+        },
+        "sig": "ab645ad403e88cb5c962788ab0da19c4c3e655052f9cd420313db7b35677e1a7"
+      },
+      "timestamp": "2026-07-06T19:44:08Z"
+    },
+    {
+      "seq": 8,
+      "label": "sdi_within_threshold",
+      "event_type": "state_transition",
+      "admitted": true,
+      "axiom_p0_result": "BOUND",
+      "axiom_p1_verdict": "ADMITTED",
+      "pm": {
+        "id": "tas-day-zero-2026-07-06",
+        "seq": 8,
+        "prev": "ff4e8301d2f20bbbf780081ee8cd0933ef96ee98c924c448ef9c759cdb38ce03",
+        "key_commit": "0000000000000000000000000000000000000000000000000000000000000000",
+        "event_hash": "c2ccbbc630d0926b8e39f67c8dda7ac29d3cf192ca671628c947641c39b0cba9",
+        "info": {
+          "source": "stability.py",
+          "p0_result": "BOUND",
+          "p1_verdict": "ADMITTED"
+        },
+        "sig": "31a35dc281dd72af08ff9436a5ed2e247b14c7b142269ee83221b26d2a7617c8"
+      },
+      "timestamp": "2026-07-06T19:44:08Z"
+    },
+    {
+      "seq": 9,
+      "label": "uvk_certification",
+      "event_type": "state_transition",
+      "admitted": true,
+      "axiom_p0_result": "BOUND",
+      "axiom_p1_verdict": "ADMITTED",
+      "pm": {
+        "id": "tas-day-zero-2026-07-06",
+        "seq": 9,
+        "prev": "625c31752d8ff0dc7a73b67a15a7d3b5bca9c5989fb7b9215ac17bde31503e0d",
+        "key_commit": "0000000000000000000000000000000000000000000000000000000000000000",
+        "event_hash": "f8c8099d3899a7c3cf1daa098e154e10d4cf158f795004f263219173e7adfd0c",
+        "info": {
+          "source": "uvk.py",
+          "p0_result": "BOUND",
+          "p1_verdict": "ADMITTED"
+        },
+        "sig": "33343453f3e87adbd2713583689a8666cfdbe10ae30e5dc40725fd0b235a32e3"
+      },
+      "timestamp": "2026-07-06T19:44:08Z"
+    },
+    {
+      "seq": 10,
+      "label": "human_api_bridge_authorised",
+      "event_type": "state_transition",
+      "admitted": true,
+      "axiom_p0_result": "BOUND",
+      "axiom_p1_verdict": "ADMITTED",
+      "pm": {
+        "id": "tas-day-zero-2026-07-06",
+        "seq": 10,
+        "prev": "59d6b5f829db3e0f99c3f71f9694cb67e62e53f86df5be2053ac1ba9bfee5d9a",
+        "key_commit": "0000000000000000000000000000000000000000000000000000000000000000",
+        "event_hash": "66d57d758be03e116396c695d1431fd451912b0a0583c651db0ef2baab5d6fca",
+        "info": {
+          "source": "human_api_bridge.py",
+          "p0_result": "BOUND",
+          "p1_verdict": "ADMITTED"
+        },
+        "sig": "bbc292f171bfd8154e2c70b94643195de83eebd0b68735a5d6ede6a0ed395da3"
+      },
+      "timestamp": "2026-07-06T19:44:08Z"
+    },
+    {
+      "seq": 11,
+      "label": "ledger_sealed",
+      "event_type": "state_transition",
+      "admitted": true,
+      "axiom_p0_result": "BOUND",
+      "axiom_p1_verdict": "ADMITTED",
+      "pm": {
+        "id": "tas-day-zero-2026-07-06",
+        "seq": 11,
+        "prev": "0d4e7bd50db1b96963f49ff1b66e09db0f18031a12c3151dd0afd48540ede931",
+        "key_commit": "0000000000000000000000000000000000000000000000000000000000000000",
+        "event_hash": "d469bfc9aa75e9c03a2ff4866a9844e0a8e5bdb8fcdaee7f5a8a5b0cd8b9ad5f",
+        "info": {
+          "source": "ledger_verifier.py",
+          "p0_result": "BOUND",
+          "p1_verdict": "ADMITTED"
+        },
+        "sig": "381b6e13dcc2f51030ed5ac70f292630f46f525edf7496b4e3836cb68a8604ef"
+      },
+      "timestamp": "2026-07-06T19:44:08Z"
+    },
+    {
+      "seq": 12,
+      "label": "chain_seal",
+      "event_type": "seal",
+      "admitted": true,
+      "chain_verified": true,
+      "pm": {
+        "id": "tas-day-zero-2026-07-06",
+        "seq": 12,
+        "prev": "6e0dc319fbfb479154fe671211c795f54e755b6d415dea842151ed31b58795bd",
+        "key_commit": "0000000000000000000000000000000000000000000000000000000000000000",
+        "event_hash": "c3cfd4bd4402a8f9c535619a46718f0441ac61397aa8cf4557e93e8f6474925a",
+        "info": {
+          "total_receipts": 12,
+          "total_refusals": 1,
+          "chain_verified": true
+        },
+        "sig": "281882662fa2ed9f25526df7dc6463e96293ba2971365889a6ae853a7be683c8"
+      },
+      "timestamp": "2026-07-06T19:44:08Z"
+    }
+  ],
+  "refusals": [
+    {
+      "label": "adversarial_synthetic_rejected",
+      "symbol": "SYNTHETIC_PAYLOAD",
+      "reason": "REFUSED:SYNTHETIC",
+      "p0_result": "SKIPPED",
+      "p0_violation": null,
+      "refusal_hash": "159732b16abb26544e42ae3ce443a03d3369441246719c01a128f00794097cfe",
+      "calculator_doctrine": "SILENT \u2014 no output emitted",
+      "timestamp": "2026-07-06T19:44:08Z"
+    }
+  ],
+  "summary": {
+    "total_transitions": 12,
+    "admitted": 13,
+    "refused": 1,
+    "chain_length": 13,
+    "chain_verified": true
+  },
+  "manifest_hash": "330e5250d9224fab3bf38cad676742e8eb90a87e8267e6bacb75691271a3d3d3"
+}

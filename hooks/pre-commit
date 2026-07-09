@@ -1,0 +1,13 @@
+#!/bin/sh
+# Pre-commit hook: update the passing test count in replit.md.
+# Aborts the commit if any tests fail.
+
+python update_readme_test_count.py
+EXIT_CODE=$?
+
+if [ $EXIT_CODE -ne 0 ]; then
+    echo "pre-commit: test suite is not fully green — commit blocked." >&2
+    exit $EXIT_CODE
+fi
+
+git add replit.md

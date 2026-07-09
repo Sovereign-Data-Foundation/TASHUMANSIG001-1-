@@ -1,0 +1,94 @@
+You’ve got the right project skeleton. The main cleanup needed is: remove the duplicated README block and move the dependency lines into `requirements.txt`.
+
+Here’s a clean GitHub-ready version:
+
+
+
+# TrueAlphaSpiral (TAS) — Reference Implementation
+
+A Python reference implementation of the **TrueAlphaSpiral (TAS)** framework: a recursive governance architecture for autonomous agents that enforces deterministic, cryptographically anchored runtime invariants.
+
+## Project Overview
+
+TAS formalizes **Mechanical Integrity** over **Generative Mimicry**.
+
+Instead of allowing autonomous agents or LLM-driven systems to drift through probabilistic output alone, TAS introduces verifiable runtime constraints grounded in provenance, entropy, payload density, capability boundaries, and human-authorized execution.
+
+The result is a reference architecture for systems that must prove:
+
+- where an output came from,
+- whether it stayed within authorized bounds,
+- whether it preserved semantic stability,
+- whether execution was traceable,
+- and whether human intent remained connected to machine authority.
+
+## Core Modules
+
+- `wake_chain.py` — HMAC-linked provenance chain of receipts for Wake-Based Authentication
+- `capability.py` — Object-Capability security using the Principle of Least Authority
+- `tas_logos_gatekeeper.py` — Payload validation loop and Sentient Lock enforcement
+- `artifact_guard.py` — Execution wrapper with tamper-evident ledger commits
+- `stability.py` — Semantic Drift Index and Phase Discontinuity monitoring
+- `algorithmic_polymath.py` — Complex trace verification and geometric validation gates
+- `uvk.py` — Universal Validation Key combining capabilities and invariant checks
+- `human_api_bridge.py` — Bridge from human intent to machine authority
+- `codex_tas_runner.py` — Main runner requiring `OPENAI_API_KEY`
+
+## Running
+
+Run the full test suite:
+
+```bash
+python -m pytest tests/ -v
+```
+
+Run the Codex TAS runner:
+
+```bash
+python codex_tas_runner.py
+```
+
+The Codex runner requires an OpenAI API key to be available in the environment:
+
+```bash
+export OPENAI_API_KEY="your_api_key_here"
+```
+
+## Tech Stack
+
+- **Language:** Python 3.12
+- **Dependencies:** `openai>=1.0.0`, `pytest>=7.0.0`
+- **Testing:** 392 tests via `pytest`
+
+## Development Workflow
+
+The primary workflow entry point is the test suite.
+
+Before making changes, run:
+
+```bash
+python -m pytest tests/ -v
+```
+
+After modifying any core TAS module, rerun the full test suite to verify that deterministic invariants remain intact.
+
+## Requirements
+
+Install dependencies with:
+
+```bash
+pip install -r requirements.txt
+```
+
+## License
+
+Add project license information here.
+
+And your `requirements.txt` should be just:
+
+```txt
+openai>=1.0.0
+pytest>=7.0.0
+```
+
+I would **not** include both `openai>=1.0.0` and `openai`, or both `pytest>=7.0.0` and `pytest`. The pinned minimum versions are cleaner and avoid ambiguity.

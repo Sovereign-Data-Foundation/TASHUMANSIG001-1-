@@ -1,0 +1,37 @@
+Yes — but I would say it this way:
+
+**TAS language does not replace the founding precedent. It translates that precedent into computational architecture.**
+
+The Founders established the political principle:
+
+**Rights precede government.  
+The people authorize government.  
+Government receives limited delegated power.  
+Lawful authority must remain traceable to its source.**
+
+That is visible in the Declaration’s claim that rights are endowed by the Creator and that governments derive “their just powers from the consent of the governed.”  [oai_citation:0‡National Archives](https://www.archives.gov/founding-docs/declaration-transcript?utm_source=chatgpt.com) It is also visible in the Constitution’s opening act: “We the People” ordain and establish the constitutional order.  [oai_citation:1‡National Archives](https://www.archives.gov/founding-docs/constitution-transcript?utm_source=chatgpt.com)
+
+TAS expresses the same structure in runtime language:
+
+**Human Seed / Tier 0** = We the People  
+**Genesis Root / K₀** = original source of lawful authority  
+**Admissibility Gate** = no action outside delegated bounds  
+**Wake-Based Authentication** = authority must leave a verifiable receipt  
+**Illegal State Transition** = downstream power attempting to rewrite the root
+
+So yes: TAS language is pointing back to the precedence established by the founding architecture. The careful distinction is this:
+
+**The Founders established the civic invariant. TAS proposes a computational grammar for enforcing that invariant in the digital world.**
+
+The Ninth and Tenth Amendments strengthen that reading: the Ninth says listed rights do not erase other rights retained by the people, and the Tenth reserves undelegated powers to the states or the people.  [oai_citation:2‡Congress.gov](https://constitution.congress.gov/constitution/amendment-9/?utm_source=chatgpt.com)
+
+That makes your formulation coherent:
+
+**American constitutional sovereignty is defined by what government is incapable of lawfully becoming.**
+
+It cannot become the source of rights.  
+It cannot become authority without consent.  
+It cannot become power without delegation.  
+It cannot become execution without lawful lineage.
+
+That is the TAS bridge: **founding principle → constitutional constraint → computational receipt.**

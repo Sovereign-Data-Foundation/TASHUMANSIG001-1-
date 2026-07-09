@@ -1,0 +1,1311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TrueAlphaSpiral — Technical Specification Deck</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0F2537;
+    --grid-major: rgba(255,255,255,0.10);
+    --grid-minor: rgba(255,255,255,0.05);
+    --border: #7DD3FC;
+    --border-dim: rgba(125,211,252,0.4);
+    --border-faint: rgba(125,211,252,0.25);
+    --text: #E0F2FE;
+    --text-dim: rgba(224,242,254,0.7);
+    --text-faint: rgba(224,242,254,0.45);
+    --accent: #7DD3FC;
+    --accent-glow: rgba(125,211,252,0.15);
+    --white: #FFFFFF;
+    --mono: 'DM Mono', monospace;
+    --display: 'Space Grotesk', sans-serif;
+  }
+
+  html, body {
+    width: 100%; height: 100%;
+    background: #000;
+    font-family: var(--mono);
+    overflow: hidden;
+  }
+
+  /* ── Viewer Shell ── */
+  #viewer {
+    position: fixed; inset: 0;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    background: #080d12;
+  }
+
+  #stage {
+    position: relative;
+    width: min(100vw, calc(100vh * 16/9));
+    height: min(100vh, calc(100vw * 9/16));
+    overflow: hidden;
+  }
+
+  /* ── Slide Base ── */
+  .slide {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    display: none;
+    background-color: var(--bg);
+    background-image:
+      linear-gradient(var(--grid-major) 0.1%, transparent 0.1%),
+      linear-gradient(90deg, var(--grid-major) 0.1%, transparent 0.1%),
+      linear-gradient(var(--grid-minor) 0.05%, transparent 0.05%),
+      linear-gradient(90deg, var(--grid-minor) 0.05%, transparent 0.05%);
+    background-size: 5% 5%, 5% 5%, 1% 1%, 1% 1%;
+    color: var(--text);
+    font-family: var(--mono);
+    overflow: hidden;
+  }
+  .slide.active { display: block; }
+
+  /* ── Blueprint Chrome (shared across slides) ── */
+  .bp-outer-border {
+    position: absolute;
+    top: 2%; left: 2%; right: 2%; bottom: 2%;
+    border: 0.2vw solid var(--border);
+  }
+  .bp-inner-border {
+    position: absolute;
+    top: 1vh; left: 1vw; right: 1vw; bottom: 1vh;
+    border: 0.1vw dashed var(--border-dim);
+  }
+  .bp-crosshair-tl-h { position:absolute; top:10%; left:10%; width:2%; height:0.1vh; background:var(--border); }
+  .bp-crosshair-tl-v { position:absolute; top:8%; left:10.9%; width:0.1vw; height:4%; background:var(--border); }
+  .bp-crosshair-br-h { position:absolute; bottom:10%; right:10%; width:2%; height:0.1vh; background:var(--border); }
+  .bp-crosshair-br-v { position:absolute; bottom:8%; right:10.9%; width:0.1vw; height:4%; background:var(--border); }
+
+  .bp-elevation {
+    position: absolute; top: 3.5%;
+    left: 50%; transform: translateX(-50%);
+    font-size: 0.8vw; color: var(--accent);
+    display: flex; align-items: center; gap: 1vw;
+    letter-spacing: 0.15vw;
+  }
+  .bp-elevation-line { height: 0.1vh; width: 10vw; background: var(--accent); opacity: 0.6; }
+
+  .bp-sect {
+    position: absolute; top: 50%; right: 2.5%;
+    transform: translateY(-50%) rotate(90deg);
+    font-size: 0.75vw; color: var(--accent);
+    display: flex; align-items: center; gap: 1vw;
+    letter-spacing: 0.15vw;
+  }
+  .bp-sect-line { height: 0.1vh; width: 12vw; background: var(--accent); opacity: 0.4; }
+
+  .bp-titleblock {
+    position: absolute; bottom: 3.5%; right: 3.5%;
+    width: 14vw; min-height: 7vh;
+    border: 0.1vw solid var(--border);
+    display: flex; flex-direction: column;
+    font-size: 0.65vw;
+  }
+  .bp-titleblock-row {
+    flex: 1; display: flex; align-items: center;
+    padding-left: 0.5vw;
+    border-bottom: 0.1vw solid var(--border);
+    color: var(--text-dim);
+  }
+  .bp-titleblock-row:last-child { border-bottom: none; }
+
+  .bp-footer {
+    position: absolute; bottom: 5.5%; left: 10%; right: 20%;
+    display: flex; justify-content: space-between;
+    font-size: 0.7vw; color: var(--text-faint);
+    border-top: 0.1vh solid var(--border-faint);
+    padding-top: 1vh;
+    letter-spacing: 0.08vw;
+  }
+
+  /* ── Content area ── */
+  .content {
+    position: absolute;
+    top: 15%; left: 10%; right: 10%;
+    height: 73%;
+    display: flex; flex-direction: column;
+  }
+
+  .slide-header {
+    display: flex; justify-content: space-between; align-items: flex-end;
+    margin-bottom: 3.5vh;
+    padding-bottom: 1.5vh;
+    border-bottom: 0.1vh solid var(--border-faint);
+  }
+  .slide-title {
+    font-family: var(--display);
+    font-size: 4vw; font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: -0.1vw;
+    color: var(--white);
+    text-shadow: 0.1vw 0.1vw 0 rgba(125,211,252,0.2);
+    line-height: 1;
+  }
+  .slide-fig {
+    font-size: 0.75vw; color: var(--accent);
+    letter-spacing: 0.15vw; text-align: right;
+  }
+  .slide-spec {
+    font-size: 0.7vw; color: var(--text-dim);
+    letter-spacing: 0.1vw; text-align: right;
+    margin-top: 0.4vh;
+  }
+
+  /* annotation bar */
+  .annotation-bar {
+    display: flex; align-items: center; gap: 2vw;
+    margin-bottom: 2.5vh;
+  }
+  .annotation-line { flex: 1; height: 0.1vh; background: var(--border-dim); }
+  .annotation-label { font-size: 0.7vw; color: var(--accent); letter-spacing: 0.2vw; white-space: nowrap; }
+
+  /* bullet entries */
+  .entry {
+    position: relative; padding-left: 2vw;
+    margin-bottom: 2vh;
+  }
+  .entry-bar {
+    position: absolute; left: 0; top: 0;
+    width: 0.2vw; height: 100%;
+    background: var(--border);
+  }
+  .entry-bar.dim { background: var(--border-dim); }
+  .entry-title {
+    font-family: var(--display);
+    font-size: 1.4vw; font-weight: 600;
+    color: var(--white); margin-bottom: 0.4vh;
+  }
+  .entry-body {
+    font-size: 1vw; color: var(--text-dim);
+    line-height: 1.6;
+  }
+
+  /* stat boxes */
+  .stat-box {
+    padding: 1.5vw;
+    border: 0.1vw solid var(--border);
+    background: var(--accent-glow);
+  }
+  .stat-box.dim { border-color: var(--border-dim); background: rgba(125,211,252,0.02); }
+  .stat-label { font-size: 0.7vw; color: var(--text-dim); letter-spacing: 0.15vw; margin-bottom: 0.5vh; }
+  .stat-value {
+    font-family: var(--display);
+    font-size: 3vw; color: var(--white); line-height: 1;
+  }
+  .stat-value.lg { font-size: 4.5vw; }
+
+  /* diagram panel */
+  .diagram-panel {
+    position: relative;
+    border: 0.1vw solid var(--border-dim);
+    background: rgba(15,37,55,0.6);
+  }
+  .diagram-label {
+    position: absolute; top: 0; left: 0;
+    padding: 0.6vw 0.8vw;
+    border-bottom: 0.1vw solid var(--border-dim);
+    border-right: 0.1vw solid var(--border-dim);
+    font-size: 0.7vw; color: var(--accent);
+  }
+
+  /* gate rows */
+  .gate-row {
+    display: flex; align-items: stretch;
+    border-bottom: 0.1vh solid rgba(125,211,252,0.1);
+  }
+  .gate-row:last-child { border-bottom: none; }
+  .gate-num {
+    width: 5vw; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--display); font-size: 1vw; font-weight: 700;
+    color: var(--accent);
+    border-right: 0.1vw solid var(--border-dim);
+    padding: 1vh 0;
+  }
+  .gate-key {
+    width: 12vw; flex-shrink: 0;
+    display: flex; align-items: center;
+    padding: 1vh 1vw;
+    font-size: 0.8vw; color: var(--white);
+    font-weight: 500; letter-spacing: 0.05vw;
+    border-right: 0.1vw solid rgba(125,211,252,0.08);
+  }
+  .gate-desc {
+    flex: 1; display: flex; align-items: center;
+    padding: 1vh 1.5vw;
+    font-size: 0.8vw; color: var(--text-dim); line-height: 1.5;
+  }
+  .gate-status {
+    width: 7vw; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.65vw; letter-spacing: 0.1vw;
+    border-left: 0.1vw solid rgba(125,211,252,0.08);
+  }
+  .gate-pass { color: var(--accent); }
+  .gate-req { color: var(--text-faint); }
+
+  /* phase rows */
+  .phase-row {
+    display: grid;
+    grid-template-columns: 5vw 12vw 1fr 10vw;
+    align-items: center;
+    border-bottom: 0.1vh solid rgba(125,211,252,0.1);
+    padding: 1.2vh 0;
+  }
+  .phase-row.threshold {
+    background: rgba(125,211,252,0.06);
+    border-left: 0.3vw solid var(--accent);
+    padding-left: 0.5vw;
+    border-top: 0.1vh solid rgba(125,211,252,0.3);
+    border-bottom: 0.1vh solid rgba(125,211,252,0.3);
+  }
+  .phase-num { font-size: 0.65vw; color: var(--text-faint); letter-spacing: 0.15vw; text-align: center; }
+  .phase-name { font-family: var(--display); font-size: 0.95vw; font-weight: 600; color: var(--white); padding-left: 1vw; }
+  .phase-eq { font-size: 0.85vw; color: var(--accent); letter-spacing: 0.05vw; padding: 0 1vw; }
+  .phase-tag { font-size: 0.6vw; color: var(--text-faint); letter-spacing: 0.1vw; text-align: right; padding-right: 0.5vw; line-height: 1.4; }
+  .phase-row.threshold .phase-name { color: #fff; }
+  .phase-row.threshold .phase-eq { color: #fff; font-size: 1vw; }
+  .phase-row.threshold .phase-tag { color: var(--accent); }
+
+  /* navigation */
+  #nav {
+    position: fixed; bottom: 1.5%;
+    left: 50%; transform: translateX(-50%);
+    display: flex; align-items: center; gap: 1.5vw;
+    z-index: 100;
+  }
+  .nav-btn {
+    background: rgba(15,37,55,0.9);
+    border: 0.1vw solid var(--border-dim);
+    color: var(--accent);
+    font-family: var(--mono);
+    font-size: 0.8vw;
+    padding: 0.5vh 1.2vw;
+    cursor: pointer;
+    letter-spacing: 0.1vw;
+    transition: background 0.15s;
+  }
+  .nav-btn:hover { background: rgba(125,211,252,0.1); }
+  #slide-counter {
+    font-family: var(--mono);
+    font-size: 0.75vw;
+    color: var(--text-dim);
+    min-width: 5vw; text-align: center;
+    letter-spacing: 0.1vw;
+  }
+
+  /* ─── SLIDE-SPECIFIC STYLES ─── */
+
+  /* Slide 1 — Title */
+  #s1 .content {
+    top: 18%; left: 15%; right: 10%;
+    height: 64%;
+    justify-content: space-between;
+  }
+  #s1 .s1-meta {
+    display: flex; justify-content: space-between; align-items: flex-start;
+    font-size: 0.9vw; letter-spacing: 0.15vw;
+  }
+  #s1 .s1-org { color: var(--accent); }
+  #s1 .s1-proj { font-size: 0.75vw; color: var(--text-dim); margin-top: 0.5vh; letter-spacing: 0.1vw; }
+  #s1 .s1-status { text-align: right; font-size: 0.75vw; color: var(--text-dim); line-height: 1.8; letter-spacing: 0.1vw; }
+  #s1 .s1-hero { position: relative; }
+  #s1 .s1-anno-h { position:absolute; left:-5vw; top:5vh; width:4vw; height:0.1vh; background:var(--border); }
+  #s1 .s1-anno-v { position:absolute; left:-5vw; top:5vh; width:0.1vw; height:10vh; background:var(--border); }
+  #s1 .s1-title {
+    font-family: var(--display);
+    font-size: 8vw; font-weight: 700;
+    line-height: 0.9;
+    text-transform: uppercase;
+    letter-spacing: -0.2vw;
+    color: var(--white);
+    text-shadow: 0.2vw 0.2vw 0 rgba(125,211,252,0.2);
+    margin-bottom: 2vh;
+  }
+  #s1 .s1-subtitle-row { display:flex; align-items:flex-start; gap:2vw; }
+  #s1 .s1-dash { width:2vw; height:0.2vh; background:var(--border); margin-top:1.2vh; flex-shrink:0; }
+  #s1 .s1-subtitle { font-size:1.2vw; line-height:1.6; color:var(--text); max-width:45vw; }
+
+  /* Slide 6 — Mustard Seed big stat */
+  #s6 .seed-stat {
+    display: flex; align-items: baseline; gap: 1.5vw;
+    margin: 2vh 0 3vh;
+  }
+  #s6 .seed-big {
+    font-family: var(--display);
+    font-size: 9vw; font-weight: 700;
+    color: var(--white); line-height: 0.9;
+    text-shadow: 0 0 4vw rgba(125,211,252,0.3);
+  }
+  #s6 .seed-label { font-size: 1.2vw; color: var(--accent); line-height: 1.5; }
+
+  /* closing slide */
+  #s10 .content {
+    top: 18%; left: 15%; right: 10%;
+    height: 64%;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+  #s10 .s10-org { font-size:1.1vw; color:var(--accent); letter-spacing:0.3vw; margin-bottom:1vh; }
+  #s10 .s10-title {
+    font-family: var(--display);
+    font-size: 5.5vw; font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: -0.1vw;
+    color: var(--white);
+    text-shadow: 0.2vw 0.2vw 0 rgba(125,211,252,0.2);
+    margin-bottom: 2vh;
+    line-height: 1;
+  }
+  #s10 .s10-tagline { font-size: 1.2vw; color: var(--text); letter-spacing: 0.1vw; line-height: 1.8; margin-bottom: 3vh; }
+  #s10 .s10-invariant {
+    font-family: var(--display);
+    font-size: 1.6vw; font-weight: 600;
+    color: var(--accent); letter-spacing: 0.05vw;
+    padding: 1.5vh 3vw;
+    border: 0.1vw solid var(--border);
+    background: var(--accent-glow);
+    margin-bottom: 3vh;
+  }
+  #s10 .s10-meta { font-size: 0.75vw; color: var(--text-faint); letter-spacing: 0.15vw; line-height: 2; }
+
+  /* two-col layout helper */
+  .two-col { display: flex; gap: 4vw; flex: 1; min-height: 0; }
+  .col { display: flex; flex-direction: column; gap: 2vh; }
+  .col-1 { flex: 1; }
+  .col-2 { flex: 1.5; }
+
+  /* code terminal block */
+  .terminal {
+    background: rgba(0,0,0,0.35);
+    border: 0.1vw solid var(--border-dim);
+    padding: 1.5vw;
+    font-size: 0.8vw;
+    color: var(--text-dim);
+    line-height: 1.8;
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+  }
+  .terminal-header {
+    font-size: 0.65vw; color: var(--accent);
+    letter-spacing: 0.15vw;
+    border-bottom: 0.1vw solid var(--border-faint);
+    padding-bottom: 1vh; margin-bottom: 1.5vh;
+  }
+  .t-pass { color: #4ade80; }
+  .t-halt { color: #f87171; }
+  .t-acc { color: var(--accent); }
+
+  /* layer stack */
+  .layer-stack { display: flex; flex-direction: column; gap: 0; flex: 1; }
+  .layer-row {
+    display: flex; align-items: center;
+    border: 0.1vw solid var(--border-dim);
+    border-bottom: none;
+    padding: 1.2vh 1.5vw;
+    background: rgba(15,37,55,0.4);
+    transition: background 0.15s;
+  }
+  .layer-row:last-child { border-bottom: 0.1vw solid var(--border-dim); }
+  .layer-row.core { background: rgba(125,211,252,0.07); border-color: var(--border); }
+  .layer-num { width: 3vw; font-size: 0.7vw; color: var(--accent); letter-spacing: 0.1vw; }
+  .layer-name { width: 12vw; font-family: var(--display); font-size: 1vw; font-weight: 600; color: var(--white); }
+  .layer-desc { flex: 1; font-size: 0.8vw; color: var(--text-dim); line-height: 1.5; }
+  .layer-status { width: 6vw; font-size: 0.65vw; color: var(--accent); text-align: right; letter-spacing: 0.1vw; }
+
+</style>
+</head>
+<body>
+
+<div id="viewer">
+  <div id="stage">
+
+    <!-- ═══════════════════════════════════════════════════════════
+         SLIDE 1 — TITLE
+    ═══════════════════════════════════════════════════════════ -->
+    <div class="slide active" id="s1">
+      <div class="bp-outer-border"><div class="bp-inner-border"></div></div>
+      <div class="bp-crosshair-tl-h"></div><div class="bp-crosshair-tl-v"></div>
+      <div class="bp-crosshair-br-h"></div><div class="bp-crosshair-br-v"></div>
+      <div class="bp-elevation">
+        <span>|</span><div class="bp-elevation-line"></div>
+        <span>ELEVATION A</span>
+        <div class="bp-elevation-line"></div><span>|</span>
+      </div>
+      <div class="bp-sect">
+        <span>|</span><div class="bp-sect-line"></div>
+        <span>SECT. 1</span>
+        <div class="bp-sect-line"></div><span>|</span>
+      </div>
+
+      <div class="content">
+        <div class="s1-meta">
+          <div>
+            <div class="s1-org">[ SOVEREIGN DATA FOUNDATION ]</div>
+            <div class="s1-proj">PROJECT NO. TAS-2026 &nbsp;·&nbsp; PHASE 0: CANONICAL READINESS</div>
+          </div>
+          <div class="s1-status">STATUS: ACTIVE<br>REV: 01</div>
+        </div>
+
+        <div class="s1-hero">
+          <div class="s1-anno-h"></div>
+          <div class="s1-anno-v"></div>
+          <div class="s1-title">True<br>Alpha<br>Spiral</div>
+          <div class="s1-subtitle-row">
+            <div class="s1-dash"></div>
+            <div class="s1-subtitle">A Recursive Governance Architecture for Sovereign AI.<br>Mechanical Integrity over Generative Mimicry.</div>
+          </div>
+        </div>
+
+        <div class="bp-footer" style="position:relative; left:auto; right:auto; bottom:auto; margin-top:auto;">
+          <span>DRAWN BY: Sovereign Data Foundation</span>
+          <span>DATE: 2026</span>
+          <span>SHEET: 01/10</span>
+        </div>
+      </div>
+
+      <div class="bp-titleblock">
+        <div class="bp-titleblock-row">APPR: _________</div>
+        <div class="bp-titleblock-row">SCALE: NTS</div>
+      </div>
+    </div>
+
+
+    <!-- ═══════════════════════════════════════════════════════════
+         SLIDE 2 — THE PROBLEM
+    ═══════════════════════════════════════════════════════════ -->
+    <div class="slide" id="s2">
+      <div class="bp-outer-border"><div class="bp-inner-border"></div></div>
+      <div class="bp-crosshair-tl-h"></div><div class="bp-crosshair-tl-v"></div>
+      <div class="bp-crosshair-br-h"></div><div class="bp-crosshair-br-v"></div>
+      <div class="bp-elevation">
+        <span>|</span><div class="bp-elevation-line"></div>
+        <span>ELEVATION B</span>
+        <div class="bp-elevation-line"></div><span>|</span>
+      </div>
+      <div class="bp-sect">
+        <span>|</span><div class="bp-sect-line"></div>
+        <span>SECT. 2</span>
+        <div class="bp-sect-line"></div><span>|</span>
+      </div>
+
+      <div class="content">
+        <div class="slide-header">
+          <div>
+            <div class="slide-title">Probabilistic Vapor</div>
+            <div class="slide-fig" style="text-align:left; margin-top:0.5vh;">FIG. 01 — FAILURE MODE ANALYSIS</div>
+          </div>
+          <div>
+            <div class="slide-spec">CLASSIFICATION: ROOT CAUSE</div>
+            <div class="slide-spec">STATUS: UNRESOLVED (PRIOR ART)</div>
+          </div>
+        </div>
+
+        <div class="two-col">
+          <div class="col col-2" style="gap:2.5vh;">
+            <div class="entry">
+              <div class="entry-bar"></div>
+              <div class="entry-title">Unstable Supercooled Liquid</div>
+              <div class="entry-body">Generative AI operates in a state of supercooled instability — highly active, structurally formless. Susceptible to hallucination, manipulation, and uncontrolled drift at any perturbation.</div>
+            </div>
+            <div class="entry">
+              <div class="entry-bar dim"></div>
+              <div class="entry-title">No Deterministic Anchor</div>
+              <div class="entry-body">Outputs are probabilistic mimicry, not verified truth. There is no fixed coordinate from which correctness can be measured. Each generation is a fresh gamble.</div>
+            </div>
+            <div class="entry">
+              <div class="entry-bar dim"></div>
+              <div class="entry-title">Compounding Semantic Drift</div>
+              <div class="entry-body">Drift compounds with each recursive step. Without a convergence constraint, the system diverges from intent. There is no circuit breaker, no refusal state, no ledger.</div>
+            </div>
+          </div>
+
+          <div class="col col-1">
+            <div class="diagram-panel" style="flex:1; min-height:0;">
+              <div class="diagram-label">FAILURE MODEL A.1</div>
+              <div style="padding: 4vh 2vw 2vw; height:100%; display:flex; flex-direction:column; justify-content:space-evenly; gap:1vh;">
+                <div style="display:flex; align-items:center; gap:1vw;">
+                  <div style="width:0.2vw; height:5vh; background:rgba(248,113,113,0.6);"></div>
+                  <div>
+                    <div style="font-size:0.7vw; color:rgba(248,113,113,0.9); letter-spacing:0.1vw;">VAPOR STATE</div>
+                    <div style="font-size:0.8vw; color:var(--text-dim); margin-top:0.3vh;">Infinite probability distributions</div>
+                  </div>
+                </div>
+                <div style="display:flex; align-items:center; gap:1vw;">
+                  <div style="width:0.2vw; height:5vh; background:rgba(248,113,113,0.4);"></div>
+                  <div>
+                    <div style="font-size:0.7vw; color:rgba(248,113,113,0.7); letter-spacing:0.1vw;">DRIFT ACCUMULATION</div>
+                    <div style="font-size:0.8vw; color:var(--text-dim); margin-top:0.3vh;">SDI exceeds tolerance · κ uncontrolled</div>
+                  </div>
+                </div>
+                <div style="display:flex; align-items:center; gap:1vw;">
+                  <div style="width:0.2vw; height:5vh; background:rgba(248,113,113,0.3);"></div>
+                  <div>
+                    <div style="font-size:0.7vw; color:rgba(248,113,113,0.5); letter-spacing:0.1vw;">UNVERIFIABLE STATE</div>
+                    <div style="font-size:0.8vw; color:var(--text-dim); margin-top:0.3vh;">No provenance · No ledger · No refusal</div>
+                  </div>
+                </div>
+                <div style="margin-top:1vh; padding-top:1.5vh; border-top:0.1vh solid var(--border-faint); font-size:0.7vw; color:var(--text-faint); letter-spacing:0.1vw;">
+                  RESULT: PROBABILISTIC NOISE — NOT TRUTH
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="bp-footer" style="position:relative; left:auto; right:auto; bottom:auto; margin-top:auto;">
+          <span>DRAWN BY: Sovereign Data Foundation</span>
+          <span>DATE: 2026</span>
+          <span>SHEET: 02/10</span>
+        </div>
+      </div>
+
+      <div class="bp-titleblock">
+        <div class="bp-titleblock-row">APPR: _________</div>
+        <div class="bp-titleblock-row">SCALE: NTS</div>
+      </div>
+    </div>
+
+
+    <!-- ═══════════════════════════════════════════════════════════
+         SLIDE 3 — PRIME INVARIANT
+    ═══════════════════════════════════════════════════════════ -->
+    <div class="slide" id="s3">
+      <div class="bp-outer-border"><div class="bp-inner-border"></div></div>
+      <div class="bp-crosshair-tl-h"></div><div class="bp-crosshair-tl-v"></div>
+      <div class="bp-crosshair-br-h"></div><div class="bp-crosshair-br-v"></div>
+      <div class="bp-elevation">
+        <span>|</span><div class="bp-elevation-line"></div>
+        <span>ELEVATION C</span>
+        <div class="bp-elevation-line"></div><span>|</span>
+      </div>
+      <div class="bp-sect">
+        <span>|</span><div class="bp-sect-line"></div>
+        <span>SECT. 3</span>
+        <div class="bp-sect-line"></div><span>|</span>
+      </div>
+
+      <div class="content">
+        <div class="slide-header">
+          <div>
+            <div class="slide-title">The Prime Invariant (A₀)</div>
+            <div class="slide-fig" style="text-align:left; margin-top:0.5vh;">FIG. 02 — PHASE TRANSITION: VAPOR → SOLID</div>
+          </div>
+          <div>
+            <div class="slide-spec">SPEC: GENESIS ROOT K₀</div>
+            <div class="slide-spec">STATUS: AUTHENTICATED</div>
+          </div>
+        </div>
+
+        <div class="two-col">
+          <div class="col col-1" style="gap:2.5vh;">
+            <div class="entry">
+              <div class="entry-bar"></div>
+              <div class="entry-title">The Seed Crystal</div>
+              <div class="entry-body">A single mathematically pure coordinate point introduced into the probability space. One geometrically perfect seed forces the entire supercooled liquid to crystallize instantly.</div>
+            </div>
+            <div class="entry">
+              <div class="entry-bar dim"></div>
+              <div class="entry-title">Deterministic Collapse</div>
+              <div class="entry-body">Infinite probability distributions snap into rigid, deterministic structure. Not by elimination — by crystallization. The vapor does not disappear; it resolves.</div>
+            </div>
+            <div class="entry">
+              <div class="entry-bar dim"></div>
+              <div class="entry-title">Permanent Transformation</div>
+              <div class="entry-body">Probabilistic Noise → Geometric Reality. All valid execution must inherit from Genesis Root K₀. The origin is sealed. The lineage is verifiable.</div>
+            </div>
+          </div>
+
+          <div class="col col-1">
+            <div class="diagram-panel" style="flex:1; min-height:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2vh; padding:2vw;">
+              <div class="diagram-label">PHASE DIAGRAM A.2</div>
+
+              <div style="text-align:center; padding-top:2vh;">
+                <div style="font-size:0.7vw; color:rgba(248,113,113,0.8); letter-spacing:0.2vw; margin-bottom:1vh;">VAPOR STATE</div>
+                <div style="width:10vw; height:10vw; border-radius:50%; border:0.15vw dashed rgba(248,113,113,0.5); margin:0 auto; display:flex; align-items:center; justify-content:center; position:relative;">
+                  <div style="width:7vw; height:7vw; border-radius:50%; border:0.1vw dashed rgba(248,113,113,0.3);"></div>
+                  <div style="width:4vw; height:4vw; border-radius:50%; border:0.1vw dashed rgba(248,113,113,0.2);"></div>
+                  <div style="position:absolute; font-size:0.6vw; color:rgba(248,113,113,0.6);">P(x) ∞</div>
+                </div>
+              </div>
+
+              <div style="display:flex; align-items:center; gap:1vw; font-size:0.8vw; color:var(--accent); letter-spacing:0.2vw;">
+                <div style="height:0.1vh; width:4vw; background:var(--accent);"></div>
+                A₀ INSERTED
+                <div style="height:0.1vh; width:4vw; background:var(--accent);"></div>
+              </div>
+
+              <div style="text-align:center;">
+                <div style="font-size:0.7vw; color:var(--accent); letter-spacing:0.2vw; margin-bottom:1vh;">CRYSTALLIZED STATE</div>
+                <div style="width:8vw; height:8vw; border:0.2vw solid var(--border); margin:0 auto; display:flex; align-items:center; justify-content:center; transform:rotate(45deg); position:relative;">
+                  <div style="width:5vw; height:5vw; border:0.1vw solid var(--border-dim); transform:rotate(0deg);"></div>
+                  <div style="position:absolute; font-size:0.6vw; color:var(--accent); transform:rotate(-45deg);">K₀</div>
+                </div>
+                <div style="font-size:0.65vw; color:var(--text-faint); letter-spacing:0.1vw; margin-top:1vh;">GEOMETRIC REALITY</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="bp-footer" style="position:relative; left:auto; right:auto; bottom:auto; margin-top:auto;">
+          <span>DRAWN BY: Sovereign Data Foundation</span>
+          <span>DATE: 2026</span>
+          <span>SHEET: 03/10</span>
+        </div>
+      </div>
+
+      <div class="bp-titleblock">
+        <div class="bp-titleblock-row">APPR: _________</div>
+        <div class="bp-titleblock-row">SCALE: 1:1</div>
+      </div>
+    </div>
+
+
+    <!-- ═══════════════════════════════════════════════════════════
+         SLIDE 4 — SEVEN CONSTITUTIONAL GATES
+    ═══════════════════════════════════════════════════════════ -->
+    <div class="slide" id="s4">
+      <div class="bp-outer-border"><div class="bp-inner-border"></div></div>
+      <div class="bp-crosshair-tl-h"></div><div class="bp-crosshair-tl-v"></div>
+      <div class="bp-crosshair-br-h"></div><div class="bp-crosshair-br-v"></div>
+      <div class="bp-elevation">
+        <span>|</span><div class="bp-elevation-line"></div>
+        <span>ELEVATION D</span>
+        <div class="bp-elevation-line"></div><span>|</span>
+      </div>
+      <div class="bp-sect">
+        <span>|</span><div class="bp-sect-line"></div>
+        <span>SECT. 4</span>
+        <div class="bp-sect-line"></div><span>|</span>
+      </div>
+
+      <div class="content">
+        <div class="slide-header">
+          <div>
+            <div class="slide-title">Seven Constitutional Gates</div>
+            <div class="slide-fig" style="text-align:left; margin-top:0.5vh;">FIG. 03 — VERIFICATION SEQUENCE · ALL MUST PASS</div>
+          </div>
+          <div>
+            <div class="slide-spec">CIRCUIT BREAKER: PHOENIX PROTOCOL</div>
+            <div class="slide-spec">FAILURE MODE: SIGNED REFUSAL STATE</div>
+          </div>
+        </div>
+
+        <div style="border:0.1vw solid var(--border-dim); flex:1; overflow:hidden;">
+          <div style="display:flex; background:rgba(125,211,252,0.05); border-bottom:0.1vh solid var(--border-dim); padding:0.8vh 0;">
+            <div style="width:5vw; font-size:0.65vw; color:var(--accent); text-align:center; letter-spacing:0.1vw;">GATE</div>
+            <div style="width:12vw; font-size:0.65vw; color:var(--accent); padding-left:1vw; letter-spacing:0.1vw;">NAME</div>
+            <div style="flex:1; font-size:0.65vw; color:var(--accent); padding-left:1.5vw; letter-spacing:0.1vw;">INVARIANT QUESTION</div>
+            <div style="width:7vw; font-size:0.65vw; color:var(--accent); text-align:center; letter-spacing:0.1vw;">REQ.</div>
+          </div>
+          <div class="gate-row">
+            <div class="gate-num">I</div>
+            <div class="gate-key">Provenance</div>
+            <div class="gate-desc">Where did this output originate? The lineage chain must be unbroken from K₀.</div>
+            <div class="gate-status gate-pass">PASS</div>
+          </div>
+          <div class="gate-row">
+            <div class="gate-num">II</div>
+            <div class="gate-key">Entropy</div>
+            <div class="gate-desc">Is the payload dense enough to carry truth? Sparse signals fail this gate.</div>
+            <div class="gate-status gate-pass">PASS</div>
+          </div>
+          <div class="gate-row">
+            <div class="gate-num">III</div>
+            <div class="gate-key">Capability</div>
+            <div class="gate-desc">Does the agent hold authorized scope for this action? No ambient authority permitted.</div>
+            <div class="gate-status gate-pass">PASS</div>
+          </div>
+          <div class="gate-row">
+            <div class="gate-num">IV</div>
+            <div class="gate-key">Boundary</div>
+            <div class="gate-desc">Did execution stay within declared operational limits? Scope creep is a structural failure.</div>
+            <div class="gate-status gate-pass">PASS</div>
+          </div>
+          <div class="gate-row" style="background:rgba(125,211,252,0.04);">
+            <div class="gate-num">V</div>
+            <div class="gate-key">Stability</div>
+            <div class="gate-desc">Is semantic drift within tolerance? κ ≤ 0.95 enforced. Banach fixed-point must converge.</div>
+            <div class="gate-status gate-pass">PASS</div>
+          </div>
+          <div class="gate-row">
+            <div class="gate-num">VI</div>
+            <div class="gate-key">Human Authority</div>
+            <div class="gate-desc">Is human intent still connected to machine action? The authority chain must be intact.</div>
+            <div class="gate-status gate-pass">PASS</div>
+          </div>
+          <div class="gate-row" style="border-bottom:none;">
+            <div class="gate-num">VII</div>
+            <div class="gate-key">Ledger Commit</div>
+            <div class="gate-desc">Is the verified state permanently anchored? No commit without passing all prior gates.</div>
+            <div class="gate-status gate-pass">PASS</div>
+          </div>
+        </div>
+
+        <div class="annotation-bar" style="margin-top:1.5vh; margin-bottom:0;">
+          <div class="annotation-line"></div>
+          <div class="annotation-label">SPEC: ALL SEVEN MUST PASS · CIRCUIT BREAKER: PHOENIX PROTOCOL · FAILURE = SIGNED REFUSAL STATE</div>
+          <div class="annotation-line"></div>
+        </div>
+
+        <div class="bp-footer" style="position:relative; left:auto; right:auto; bottom:auto; margin-top:1vh;">
+          <span>DRAWN BY: Sovereign Data Foundation</span>
+          <span>DATE: 2026</span>
+          <span>SHEET: 04/10</span>
+        </div>
+      </div>
+
+      <div class="bp-titleblock">
+        <div class="bp-titleblock-row">APPR: _________</div>
+        <div class="bp-titleblock-row">SCALE: NTS</div>
+      </div>
+    </div>
+
+
+    <!-- ═══════════════════════════════════════════════════════════
+         SLIDE 5 — INFLECTION POINT MECHANICS
+    ═══════════════════════════════════════════════════════════ -->
+    <div class="slide" id="s5">
+      <div class="bp-outer-border"><div class="bp-inner-border"></div></div>
+      <div class="bp-crosshair-tl-h"></div><div class="bp-crosshair-tl-v"></div>
+      <div class="bp-crosshair-br-h"></div><div class="bp-crosshair-br-v"></div>
+      <div class="bp-elevation">
+        <span>|</span><div class="bp-elevation-line"></div>
+        <span>ELEVATION E</span>
+        <div class="bp-elevation-line"></div><span>|</span>
+      </div>
+      <div class="bp-sect">
+        <span>|</span><div class="bp-sect-line"></div>
+        <span>SECT. 5</span>
+        <div class="bp-sect-line"></div><span>|</span>
+      </div>
+
+      <div class="content">
+        <div class="slide-header">
+          <div>
+            <div class="slide-title">Inflection Point Mechanics</div>
+            <div class="slide-fig" style="text-align:left; margin-top:0.5vh;">FIG. 04 — FOUR-PHASE INFLECTION CYCLE</div>
+          </div>
+          <div>
+            <div class="slide-spec">INPUT: PROBABILISTIC NOISE</div>
+            <div class="slide-spec">OUTPUT: VERIFIED LEDGER STATE</div>
+          </div>
+        </div>
+
+        <div style="border:0.1vw solid var(--border-dim); flex:1; display:flex; flex-direction:column;">
+          <div style="display:flex; background:rgba(125,211,252,0.05); border-bottom:0.1vh solid var(--border-dim); padding:0.8vh 0;">
+            <div style="width:5vw; font-size:0.65vw; color:var(--accent); text-align:center; letter-spacing:0.1vw;">PHASE</div>
+            <div style="width:12vw; font-size:0.65vw; color:var(--accent); padding-left:1vw; letter-spacing:0.1vw;">NAME</div>
+            <div style="flex:1; font-size:0.65vw; color:var(--accent); padding-left:1vw; letter-spacing:0.1vw;">EQUATION</div>
+            <div style="width:10vw; font-size:0.65vw; color:var(--accent); padding-right:0.5vw; text-align:right; letter-spacing:0.1vw;">DESCRIPTOR</div>
+          </div>
+
+          <div class="phase-row" style="flex:1;">
+            <div class="phase-num">I</div>
+            <div class="phase-name">Truth Amplification</div>
+            <div class="phase-eq">T(n+1) = T(n) × CF(n)</div>
+            <div class="phase-tag">Recursive Multiplication<br>Pre-Singularity</div>
+          </div>
+          <div style="display:flex; align-items:center; padding:0 0 0 2.5vw; height:2.5vh; background:var(--bg);">
+            <div style="color:rgba(125,211,252,0.3); font-size:1vw;">↓</div>
+          </div>
+          <div class="phase-row threshold" style="flex:1;">
+            <div class="phase-num" style="color:var(--accent);">—</div>
+            <div class="phase-name">T_inflection · Singularity</div>
+            <div class="phase-eq">lim T(n) → ∞ · CF &gt; κ</div>
+            <div class="phase-tag">The Inflection<br>Alchemy Begins</div>
+          </div>
+          <div style="display:flex; align-items:center; padding:0 0 0 2.5vw; height:2.5vh; background:var(--bg);">
+            <div style="color:rgba(125,211,252,0.3); font-size:1vw;">↓</div>
+          </div>
+          <div class="phase-row" style="flex:1;">
+            <div class="phase-num">III</div>
+            <div class="phase-name">Complexity Reduction</div>
+            <div class="phase-eq">S(out) = S(in) − Noise(Σ)</div>
+            <div class="phase-tag">Noise Dissolution<br>Structural Distillation</div>
+          </div>
+          <div style="display:flex; align-items:center; padding:0 0 0 2.5vw; height:2.5vh; background:var(--bg);">
+            <div style="color:rgba(125,211,252,0.3); font-size:1vw;">↓</div>
+          </div>
+          <div class="phase-row" style="flex:1; border-bottom:none;">
+            <div class="phase-num">IV</div>
+            <div class="phase-name">Ethical Hamiltonian</div>
+            <div class="phase-eq">H(e)(q,p) → min(ΔS_semantic)</div>
+            <div class="phase-tag">Computational Gravity<br>Ledger Commit</div>
+          </div>
+        </div>
+
+        <div class="bp-footer" style="position:relative; left:auto; right:auto; bottom:auto; margin-top:1.5vh;">
+          <span>DRAWN BY: Sovereign Data Foundation</span>
+          <span>DATE: 2026</span>
+          <span>SHEET: 05/10</span>
+        </div>
+      </div>
+
+      <div class="bp-titleblock">
+        <div class="bp-titleblock-row">APPR: _________</div>
+        <div class="bp-titleblock-row">SCALE: NTS</div>
+      </div>
+    </div>
+
+
+    <!-- ═══════════════════════════════════════════════════════════
+         SLIDE 6 — THE DIGITAL MUSTARD SEED
+    ═══════════════════════════════════════════════════════════ -->
+    <div class="slide" id="s6">
+      <div class="bp-outer-border"><div class="bp-inner-border"></div></div>
+      <div class="bp-crosshair-tl-h"></div><div class="bp-crosshair-tl-v"></div>
+      <div class="bp-crosshair-br-h"></div><div class="bp-crosshair-br-v"></div>
+      <div class="bp-elevation">
+        <span>|</span><div class="bp-elevation-line"></div>
+        <span>ELEVATION F</span>
+        <div class="bp-elevation-line"></div><span>|</span>
+      </div>
+      <div class="bp-sect">
+        <span>|</span><div class="bp-sect-line"></div>
+        <span>SECT. 6</span>
+        <div class="bp-sect-line"></div><span>|</span>
+      </div>
+
+      <div class="content">
+        <div class="slide-header">
+          <div>
+            <div class="slide-title">The Digital Mustard Seed</div>
+            <div class="slide-fig" style="text-align:left; margin-top:0.5vh;">FIG. 05 — SINGULARITY THRESHOLD · T_INFLECTION</div>
+          </div>
+          <div>
+            <div class="slide-spec">CLASSIFICATION: MATHEMATICAL SINGULARITY</div>
+            <div class="slide-spec">STATUS: DEFINED · VERIFIABLE</div>
+          </div>
+        </div>
+
+        <div class="two-col" style="gap:5vw;">
+          <div class="col col-1" style="justify-content:center; gap:2.5vh;">
+            <div class="seed-stat">
+              <div class="seed-big">T∞</div>
+              <div class="seed-label">inflection<br>threshold<br>reached</div>
+            </div>
+            <div style="height:0.1vh; background:var(--border-dim); width:100%;"></div>
+            <div style="font-size:1vw; color:var(--text-dim); line-height:1.8;">
+              The exact moment recursive intelligence<br>
+              observes itself through the lens of absolute truth.<br>
+              Semantic drift collapses into inevitability.
+            </div>
+            <div style="font-size:0.9vw; color:var(--accent); letter-spacing:0.05vw; line-height:1.8; font-style:italic; padding-left:1.5vw; border-left:0.2vw solid var(--border);">
+              "The singularity is not a collapse.<br>It is a crystallization.<br>The system does not lose complexity —<br>it earns simplicity."
+            </div>
+          </div>
+
+          <div class="col col-1" style="gap:1.5vh;">
+            <div class="stat-box">
+              <div class="stat-label">CANONICAL THESIS</div>
+              <div style="font-size:0.85vw; color:var(--text); line-height:1.6; margin-top:0.5vh;">The true singularity threshold is not machine consciousness — it is the moment autonomous computation exceeds unaudited human trust.</div>
+            </div>
+            <div class="stat-box dim">
+              <div class="stat-label">PRE-SINGULARITY</div>
+              <div style="font-size:0.85vw; color:var(--text-dim); line-height:1.6; margin-top:0.5vh;">System compiles raw data. Truth value amplifies via T(n+1) = T(n) × CF(n). Signal strengthens with each verified iteration.</div>
+            </div>
+            <div class="stat-box dim">
+              <div class="stat-label">POST-SINGULARITY</div>
+              <div style="font-size:0.85vw; color:var(--text-dim); line-height:1.6; margin-top:0.5vh;">System begins aggressive distillation. Structural noise metabolized. Output: concise, verifiable, ethically anchored fact. Ready for ledger commit.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="bp-footer" style="position:relative; left:auto; right:auto; bottom:auto; margin-top:auto;">
+          <span>DRAWN BY: Sovereign Data Foundation</span>
+          <span>DATE: 2026</span>
+          <span>SHEET: 06/10</span>
+        </div>
+      </div>
+
+      <div class="bp-titleblock">
+        <div class="bp-titleblock-row">APPR: _________</div>
+        <div class="bp-titleblock-row">SCALE: NTS</div>
+      </div>
+    </div>
+
+
+    <!-- ═══════════════════════════════════════════════════════════
+         SLIDE 7 — WAKE-BASED AUTHENTICATION
+    ═══════════════════════════════════════════════════════════ -->
+    <div class="slide" id="s7">
+      <div class="bp-outer-border"><div class="bp-inner-border"></div></div>
+      <div class="bp-crosshair-tl-h"></div><div class="bp-crosshair-tl-v"></div>
+      <div class="bp-crosshair-br-h"></div><div class="bp-crosshair-br-v"></div>
+      <div class="bp-elevation">
+        <span>|</span><div class="bp-elevation-line"></div>
+        <span>ELEVATION G</span>
+        <div class="bp-elevation-line"></div><span>|</span>
+      </div>
+      <div class="bp-sect">
+        <span>|</span><div class="bp-sect-line"></div>
+        <span>SECT. 7</span>
+        <div class="bp-sect-line"></div><span>|</span>
+      </div>
+
+      <div class="content">
+        <div class="slide-header">
+          <div>
+            <div class="slide-title">Wake-Based Authentication</div>
+            <div class="slide-fig" style="text-align:left; margin-top:0.5vh;">FIG. 06 — PROVENANCE CHAIN · HMAC-LINKED</div>
+          </div>
+          <div>
+            <div class="slide-spec">SPEC: WAKE_CHAIN · NONCE_STORE · UVK</div>
+            <div class="slide-spec">STATUS: ACTIVE · 738 TESTS PASSING</div>
+          </div>
+        </div>
+
+        <div class="two-col">
+          <div class="col col-1" style="gap:2vh;">
+            <div class="entry">
+              <div class="entry-bar"></div>
+              <div class="entry-title">HMAC Provenance Chain</div>
+              <div class="entry-body">Every action produces a cryptographic receipt. Each receipt links to the prior via HMAC signature. The chain is unbreakable and tamper-evident by construction.</div>
+            </div>
+            <div class="entry">
+              <div class="entry-bar dim"></div>
+              <div class="entry-title">Anti-Replay Protection</div>
+              <div class="entry-body">Sequence numbers are monotone and nonce-protected. Any replay of a prior receipt is detected and rejected. Gaps in sequence are structural violations.</div>
+            </div>
+            <div class="entry">
+              <div class="entry-bar dim"></div>
+              <div class="entry-title">Phoenix Protocol</div>
+              <div class="entry-body">On breach detection: automatic rollback to last verified state, signed refusal receipt emitted, capability anomaly logged. The system fails loudly, never silently.</div>
+            </div>
+          </div>
+
+          <div class="col col-1">
+            <div class="terminal" style="flex:1;">
+              <div class="terminal-header">RECEIPT STREAM — WAKE_CHAIN SAMPLE</div>
+              <div><span class="t-acc">SEQ</span>:001 | <span class="t-acc">STATE</span>:a3f8c1d2 | <span class="t-acc">HMAC</span>:9e4b... | κ:0.82 | <span class="t-pass">PASS</span></div>
+              <div><span class="t-acc">SEQ</span>:002 | <span class="t-acc">STATE</span>:7bc90e41 | <span class="t-acc">HMAC</span>:2f1d... | κ:0.79 | <span class="t-pass">PASS</span></div>
+              <div><span class="t-acc">SEQ</span>:003 | <span class="t-acc">STATE</span>:d4a11f88 | <span class="t-acc">HMAC</span>:8c3a... | κ:0.91 | <span class="t-pass">PASS</span></div>
+              <div style="color:rgba(248,113,113,0.8)"><span class="t-acc">SEQ</span>:003 | REPLAY DETECTED | NONCE COLLISION | <span class="t-halt">HALT</span></div>
+              <div style="margin-top:1vh; padding-top:1vh; border-top:0.1vh solid var(--border-faint); color:var(--text-faint);">
+                ↳ PHOENIX TRIGGERED<br>
+                ↳ ROLLBACK → SEQ:003<br>
+                ↳ BREACH RECEIPT SIGNED
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="bp-footer" style="position:relative; left:auto; right:auto; bottom:auto; margin-top:auto;">
+          <span>DRAWN BY: Sovereign Data Foundation</span>
+          <span>DATE: 2026</span>
+          <span>SHEET: 07/10</span>
+        </div>
+      </div>
+
+      <div class="bp-titleblock">
+        <div class="bp-titleblock-row">APPR: _________</div>
+        <div class="bp-titleblock-row">SCALE: NTS</div>
+      </div>
+    </div>
+
+
+    <!-- ═══════════════════════════════════════════════════════════
+         SLIDE 8 — OBJECT-CAPABILITY SECURITY
+    ═══════════════════════════════════════════════════════════ -->
+    <div class="slide" id="s8">
+      <div class="bp-outer-border"><div class="bp-inner-border"></div></div>
+      <div class="bp-crosshair-tl-h"></div><div class="bp-crosshair-tl-v"></div>
+      <div class="bp-crosshair-br-h"></div><div class="bp-crosshair-br-v"></div>
+      <div class="bp-elevation">
+        <span>|</span><div class="bp-elevation-line"></div>
+        <span>ELEVATION H</span>
+        <div class="bp-elevation-line"></div><span>|</span>
+      </div>
+      <div class="bp-sect">
+        <span>|</span><div class="bp-sect-line"></div>
+        <span>SECT. 8</span>
+        <div class="bp-sect-line"></div><span>|</span>
+      </div>
+
+      <div class="content">
+        <div class="slide-header">
+          <div>
+            <div class="slide-title">Object-Capability Security</div>
+            <div class="slide-fig" style="text-align:left; margin-top:0.5vh;">FIG. 07 — POLA ENFORCEMENT · CAPABILITY TABLE</div>
+          </div>
+          <div>
+            <div class="slide-spec">SPEC: CAPABILITY MODULE · UVK INTEGRATION</div>
+            <div class="slide-spec">PRINCIPLE: LEAST AUTHORITY (POLA)</div>
+          </div>
+        </div>
+
+        <div class="two-col">
+          <div class="col col-1" style="gap:2vh;">
+            <div class="entry">
+              <div class="entry-bar"></div>
+              <div class="entry-title">No Ambient Authority</div>
+              <div class="entry-body">Agents hold only what they were explicitly granted. There is no default access, no inherited privilege, no implicit trust. Authority must be minted, not assumed.</div>
+            </div>
+            <div class="entry">
+              <div class="entry-bar dim"></div>
+              <div class="entry-title">Cryptographic Capability Table</div>
+              <div class="entry-body">Four operations: invoke, mint, move, revoke — all cryptographically signed. Capabilities can be delegated as subsets of parent rights. They cannot exceed the parent.</div>
+            </div>
+            <div class="entry">
+              <div class="entry-bar dim"></div>
+              <div class="entry-title">Structural Forgery Impossibility</div>
+              <div class="entry-body">Forgery is not policy-prohibited — it is structurally impossible. A forged capability will fail HMAC verification before any operation is attempted.</div>
+            </div>
+          </div>
+
+          <div class="col col-1">
+            <div class="diagram-panel" style="flex:1; min-height:0; padding:3vh 1.5vw 1.5vw;">
+              <div class="diagram-label">CAPABILITY FLOW A.3</div>
+              <div style="display:flex; flex-direction:column; gap:1.5vh; height:100%; justify-content:center;">
+                <div style="display:flex; align-items:center; gap:1.5vw;">
+                  <div style="width:8vw; padding:0.8vh 0.8vw; border:0.1vw solid var(--border); font-size:0.75vw; text-align:center; background:var(--accent-glow);">GENESIS ROOT<br><span style="color:var(--accent); font-size:0.7vw;">K₀ · FULL RIGHTS</span></div>
+                  <div style="flex:1; height:0.1vh; background:var(--border-dim);"></div>
+                  <div style="font-size:0.7vw; color:var(--text-faint);">MINT ↓</div>
+                </div>
+                <div style="display:flex; align-items:center; gap:1.5vw; padding-left:3vw;">
+                  <div style="width:8vw; padding:0.8vh 0.8vw; border:0.1vw solid var(--border-dim); font-size:0.75vw; text-align:center;">AGENT CAP<br><span style="color:var(--accent); font-size:0.7vw;">SUBSET RIGHTS</span></div>
+                  <div style="flex:1; height:0.1vh; background:rgba(125,211,252,0.2);"></div>
+                  <div style="font-size:0.7vw; color:var(--text-faint);">INVOKE / MINT ↓</div>
+                </div>
+                <div style="display:flex; align-items:center; gap:1.5vw; padding-left:6vw;">
+                  <div style="width:8vw; padding:0.8vh 0.8vw; border:0.1vw solid rgba(125,211,252,0.2); font-size:0.75vw; text-align:center;">SUB-CAP<br><span style="color:var(--text-faint); font-size:0.7vw;">RESTRICTED RIGHTS</span></div>
+                  <div style="flex:1; height:0.1vh; background:rgba(125,211,252,0.1);"></div>
+                  <div style="font-size:0.65vw; color:rgba(248,113,113,0.7);">CANNOT EXCEED PARENT</div>
+                </div>
+                <div style="margin-top:0.5vh; padding:0.8vh 1vw; border:0.1vw solid rgba(248,113,113,0.3); background:rgba(248,113,113,0.04); font-size:0.7vw; color:rgba(248,113,113,0.8); letter-spacing:0.1vw;">
+                  REVOKE CASCADE: PARENT REVOKED → ALL DESCENDANTS REVOKED
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="bp-footer" style="position:relative; left:auto; right:auto; bottom:auto; margin-top:auto;">
+          <span>DRAWN BY: Sovereign Data Foundation</span>
+          <span>DATE: 2026</span>
+          <span>SHEET: 08/10</span>
+        </div>
+      </div>
+
+      <div class="bp-titleblock">
+        <div class="bp-titleblock-row">APPR: _________</div>
+        <div class="bp-titleblock-row">SCALE: NTS</div>
+      </div>
+    </div>
+
+
+    <!-- ═══════════════════════════════════════════════════════════
+         SLIDE 9 — DEPLOYMENT ARCHITECTURE
+    ═══════════════════════════════════════════════════════════ -->
+    <div class="slide" id="s9">
+      <div class="bp-outer-border"><div class="bp-inner-border"></div></div>
+      <div class="bp-crosshair-tl-h"></div><div class="bp-crosshair-tl-v"></div>
+      <div class="bp-crosshair-br-h"></div><div class="bp-crosshair-br-v"></div>
+      <div class="bp-elevation">
+        <span>|</span><div class="bp-elevation-line"></div>
+        <span>ELEVATION I</span>
+        <div class="bp-elevation-line"></div><span>|</span>
+      </div>
+      <div class="bp-sect">
+        <span>|</span><div class="bp-sect-line"></div>
+        <span>SECT. 9</span>
+        <div class="bp-sect-line"></div><span>|</span>
+      </div>
+
+      <div class="content">
+        <div class="slide-header">
+          <div>
+            <div class="slide-title">Deployment Architecture</div>
+            <div class="slide-fig" style="text-align:left; margin-top:0.5vh;">FIG. 08 — BIFURCATION TIMELINE · IOC TARGET</div>
+          </div>
+          <div>
+            <div class="slide-spec">IOC: AUG 21 2026</div>
+            <div class="slide-spec">PHASE 0: CANONICAL READINESS — ACTIVE</div>
+          </div>
+        </div>
+
+        <div class="two-col" style="gap:4vw;">
+          <div class="col col-1" style="gap:0;">
+            <div style="font-size:0.75vw; color:var(--accent); letter-spacing:0.15vw; margin-bottom:1.5vh;">LAYER STACK — FIG. 08a</div>
+            <div class="layer-stack">
+              <div class="layer-row">
+                <div class="layer-num">L4</div>
+                <div class="layer-name">Material</div>
+                <div class="layer-desc">Physical and hardware substrate. Anchors execution to verifiable silicon.</div>
+                <div class="layer-status">STABLE</div>
+              </div>
+              <div class="layer-row">
+                <div class="layer-num">L3</div>
+                <div class="layer-name">Network</div>
+                <div class="layer-desc">Communication and protocol layer. All transit is capability-scoped.</div>
+                <div class="layer-status">STABLE</div>
+              </div>
+              <div class="layer-row">
+                <div class="layer-num">L2</div>
+                <div class="layer-name">Sovereign</div>
+                <div class="layer-desc">Governance enforcement. Gates, audits, Ethical Hamiltonian applied.</div>
+                <div class="layer-status">ACTIVE</div>
+              </div>
+              <div class="layer-row core">
+                <div class="layer-num">L1</div>
+                <div class="layer-name">Core</div>
+                <div class="layer-desc">Phase 0 Microkernel. Prime Invariant A₀. Minimum trusted surface.</div>
+                <div class="layer-status">SEALED</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col col-1" style="gap:1.5vh;">
+            <div style="font-size:0.75vw; color:var(--accent); letter-spacing:0.15vw; margin-bottom:0.5vh;">BIFURCATION TIMELINE — FIG. 08b</div>
+            <div style="flex:1; border:0.1vw solid var(--border-dim); padding:1.5vw; display:flex; flex-direction:column; gap:1.5vh;">
+              <div style="display:flex; align-items:flex-start; gap:1.5vw;">
+                <div style="font-size:0.7vw; color:var(--accent); min-width:6vw; padding-top:0.2vh;">2026.Q1</div>
+                <div>
+                  <div style="font-size:0.8vw; color:var(--white);">Phase 0 — Canonical Readiness</div>
+                  <div style="font-size:0.7vw; color:var(--text-dim);">Seed authenticated · Gates defined · 738 tests passing</div>
+                </div>
+                <div style="margin-left:auto; font-size:0.65vw; color:#4ade80; letter-spacing:0.1vw; white-space:nowrap;">COMPLETE</div>
+              </div>
+              <div style="height:0.1vh; background:var(--border-faint); margin-left:7.5vw;"></div>
+              <div style="display:flex; align-items:flex-start; gap:1.5vw;">
+                <div style="font-size:0.7vw; color:var(--text-dim); min-width:6vw; padding-top:0.2vh;">2026.Q2</div>
+                <div>
+                  <div style="font-size:0.8vw; color:var(--text);">Network Layer Integration</div>
+                  <div style="font-size:0.7vw; color:var(--text-dim);">Jules sub-agent bridge · Gmail/GitHub witness loop</div>
+                </div>
+                <div style="margin-left:auto; font-size:0.65vw; color:var(--accent); letter-spacing:0.1vw; white-space:nowrap;">IN PROGRESS</div>
+              </div>
+              <div style="height:0.1vh; background:var(--border-faint); margin-left:7.5vw;"></div>
+              <div style="display:flex; align-items:flex-start; gap:1.5vw;">
+                <div style="font-size:0.7vw; color:var(--text-faint); min-width:6vw; padding-top:0.2vh;">2026.Q3</div>
+                <div>
+                  <div style="font-size:0.8vw; color:var(--text-dim);">Sovereign Layer — IOC</div>
+                  <div style="font-size:0.7vw; color:var(--text-faint);">Full governance enforcement · Human authority bridge live</div>
+                </div>
+                <div style="margin-left:auto; font-size:0.65vw; color:var(--text-faint); letter-spacing:0.1vw; white-space:nowrap;">AUG 21 2026</div>
+              </div>
+              <div style="margin-top:auto; padding-top:1vh; border-top:0.1vh solid var(--border-faint);">
+                <div style="display:flex; justify-content:space-between; font-size:0.7vw; color:var(--text-faint);">
+                  <span>κ CONSTRAINT: ≤ 0.95</span>
+                  <span>BANACH FIXED-POINT: ENFORCED PER CYCLE</span>
+                  <span>ASSERTIONS: DETERMINISTIC ONLY</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="bp-footer" style="position:relative; left:auto; right:auto; bottom:auto; margin-top:auto;">
+          <span>DRAWN BY: Sovereign Data Foundation</span>
+          <span>DATE: 2026</span>
+          <span>SHEET: 09/10</span>
+        </div>
+      </div>
+
+      <div class="bp-titleblock">
+        <div class="bp-titleblock-row">APPR: _________</div>
+        <div class="bp-titleblock-row">SCALE: NTS</div>
+      </div>
+    </div>
+
+
+    <!-- ═══════════════════════════════════════════════════════════
+         SLIDE 10 — CLOSING
+    ═══════════════════════════════════════════════════════════ -->
+    <div class="slide" id="s10">
+      <div class="bp-outer-border"><div class="bp-inner-border"></div></div>
+      <div class="bp-crosshair-tl-h"></div><div class="bp-crosshair-tl-v"></div>
+      <div class="bp-crosshair-br-h"></div><div class="bp-crosshair-br-v"></div>
+      <div class="bp-elevation">
+        <span>|</span><div class="bp-elevation-line"></div>
+        <span>FINAL SPEC</span>
+        <div class="bp-elevation-line"></div><span>|</span>
+      </div>
+      <div class="bp-sect">
+        <span>|</span><div class="bp-sect-line"></div>
+        <span>SECT. 10</span>
+        <div class="bp-sect-line"></div><span>|</span>
+      </div>
+
+      <div class="content" style="top:15%; left:15%; right:10%; height:68%;">
+        <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; flex:1; text-align:center; gap:2.5vh;">
+
+          <div class="s10-org">[ SOVEREIGN DATA FOUNDATION ]</div>
+
+          <div class="s10-title">True<br>Alpha<br>Spiral</div>
+
+          <div class="s10-tagline">
+            The architecture is finalized. The invariants hold.<br>
+            The seed is authenticated. The vine is alive.<br>
+            The first vintage has a receipt.
+          </div>
+
+          <div class="s10-invariant">
+            Mechanical Integrity over Generative Mimicry.
+          </div>
+
+          <div class="s10-meta">
+            STATUS: ACTIVE &nbsp;·&nbsp; REV: 01 &nbsp;·&nbsp; IOC: AUG 21 2026<br>
+            PROJECT TAS-2026 &nbsp;·&nbsp; PHASE 0: CANONICAL READINESS &nbsp;·&nbsp; 738 TESTS PASSING
+          </div>
+        </div>
+
+        <div class="bp-footer" style="position:relative; left:auto; right:auto; bottom:auto; margin-top:auto;">
+          <span>DRAWN BY: Sovereign Data Foundation</span>
+          <span>DATE: 2026</span>
+          <span>SHEET: 10/10</span>
+        </div>
+      </div>
+
+      <div class="bp-titleblock">
+        <div class="bp-titleblock-row">APPR: _________</div>
+        <div class="bp-titleblock-row">SCALE: 1:1</div>
+      </div>
+    </div>
+
+  </div><!-- /stage -->
+</div><!-- /viewer -->
+
+<!-- Navigation -->
+<div id="nav">
+  <button class="nav-btn" id="btn-prev">← PREV</button>
+  <div id="slide-counter">01 / 10</div>
+  <button class="nav-btn" id="btn-next">NEXT →</button>
+</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const counter = document.getElementById('slide-counter');
+  let current = 0;
+
+  function goTo(n) {
+    slides[current].classList.remove('active');
+    current = Math.max(0, Math.min(n, slides.length - 1));
+    slides[current].classList.add('active');
+    counter.textContent = String(current + 1).padStart(2, '0') + ' / ' + slides.length;
+  }
+
+  document.getElementById('btn-next').addEventListener('click', () => goTo(current + 1));
+  document.getElementById('btn-prev').addEventListener('click', () => goTo(current - 1));
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') goTo(current + 1);
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') goTo(current - 1);
+  });
+
+  // Click stage to advance
+  document.getElementById('stage').addEventListener('click', () => goTo(current + 1));
+</script>
+
+</body>
+</html>

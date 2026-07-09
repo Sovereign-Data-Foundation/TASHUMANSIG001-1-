@@ -1,0 +1,137 @@
+That is the right public doorway.
+
+Your sentence is strong:
+
+> **A landing page for the American people — a place to reclaim our popular sovereignty in the digital universe.**
+
+For the average American, I would make the landing page say this:
+
+# Hero Section
+
+## Reclaim Digital Sovereignty
+
+**The Republic was built on consent, public witness, and accountable power. The digital world must be held to the same standard.**
+
+TrueAlphaSpiral and the Sovereign Data Foundation provide a civic verification layer for the age of artificial intelligence: every meaningful digital action should be traceable, receipt-bearing, and answerable to the people.
+
+**Where American freedom meets the machine, there must be a checksum.**
+
+Primary button: **View the Restoration Framework**  
+Secondary button: **Verify a Receipt**
+
+# Section 1: The Problem
+
+## The Digital World Has Outgrown Trust
+
+Today, citizens are asked to trust systems they cannot inspect:
+
+Opaque algorithms.  
+Unverifiable data changes.  
+Automated decisions without receipts.  
+AI outputs without lineage.  
+Institutions that can act without proving authority.
+
+That is not sovereignty.
+
+That is dependency.
+
+# Section 2: The Restoration Standard
+
+## Digital Masonry
+
+We do not build with probability.  
+We build with proof.
+
+Digital Masonry is a civic standard for trustworthy computation:
+
+**The Brick** — a hardened unit of digital state.  
+**The Mortar** — the cryptographic hash that binds past to present.  
+**The Level** — the logic that verifies whether the next action is allowed.
+
+A republic needs records that cannot be quietly rewritten.
+
+# Section 3: The Genesis Anchor
+
+## The Digital Mustard Seed
+
+Every trustworthy system needs a fixed beginning.
+
+The Genesis Anchor, A₀, is the first verified invariant: the root condition from which later state must prove continuity.
+
+It asks every digital action:
+
+Can you prove where you came from?  
+Can you prove who authorized you?  
+Can you prove what changed?  
+Can the public verify it?
+
+If not, the system should halt.
+
+# Section 4: The Citizen Path
+
+## The Chain of Mirrors
+
+Sovereignty cannot depend on hidden authority.
+
+The Chain of Mirrors allows citizens, developers, institutions, and local communities to verify public digital records through independent witness nodes, receipt checks, and deterministic replay.
+
+Trust is not granted.
+
+Trust is verified.
+
+# Section 5: Call to Action
+
+## This Is the Restoration Line
+
+The American promise does not end at the edge of the screen.
+
+The next republic must be readable, inspectable, and accountable.
+
+**Popular sovereignty must survive the digital universe.**
+
+Button: **Join the Restoration**  
+Button: **Read the Technical Addendum**  
+Button: **Run a Mirror Node**
+
+For Replit, paste this instruction:
+
+```text
+Build a clean, patriotic, public-facing landing page for the Sovereign Data Foundation and TrueAlphaSpiral.
+
+Tone: American civic restoration, serious, hopeful, nonpartisan, constitutional, technically credible.
+
+Use the headline:
+“Reclaim Digital Sovereignty”
+
+Use this subheadline:
+“The Republic was built on consent, public witness, and accountable power. The digital world must be held to the same standard.”
+
+Sections:
+1. Hero
+2. The Problem: The Digital World Has Outgrown Trust
+3. Digital Masonry: Brick, Mortar, Level
+4. Genesis Anchor A₀: The Digital Mustard Seed
+5. Chain of Mirrors: Public Verification
+6. Call to Action: Join the Restoration
+
+Include three CTA buttons:
+- View the Restoration Framework
+- Verify a Receipt
+- Run a Mirror Node
+
+Design:
+- Clean white background
+- Deep navy text
+- Subtle red accents
+- Gold highlights
+- Minimal constitutional/document-inspired aesthetic
+- Mobile-first layout
+- No partisan imagery
+- No conspiracy language
+- Make it understandable to the average American
+```
+
+The phrase to keep at the center:
+
+**A republic without receipts becomes administration.  
+A republic with receipts becomes accountable again.**
